@@ -1,0 +1,326 @@
+[
+    {
+        "001": [
+            "Florizarre",
+            "Sa plante donne une grosse fleur quand elle absorbe les rayons du soleil. Il est toujours à la recherche des endroits les plus ensoleillés."
+        ]
+    },
+    {
+        "002": [
+            "Dracaufeu",
+            "On raconte que plus un Dracaufeu a vécu de combats difficiles, plus sa flamme est brûlante."
+        ]
+    },
+    {
+        "003": [
+            "Tortank",
+            "Il écrase ses adversaires de tout son poids pour leur faire perdre connaissance. Il rentre dans sa carapace s'il se sent en danger."
+        ]
+    },
+        {
+        "004": [
+            "Pikachu",
+            "Quand il s’énerve, il libère instantanément l’énergie emmagasinée dans les poches de ses joues."
+        ]
+    },
+    {
+        "005": [
+            "Ronflex",
+            "Son estomac peut dig\u00e9rer n\u2019importe quel type de nourriture, m\u00eame si elle est moisie ou pourrie."
+        ]
+    },
+    {
+        "006": [
+            "Lokhlass",
+            "Il adore traverser les mers en portant des \u00eatres humains ou des Pok\u00e9mon sur son dos, et il comprend le langage humain."
+        ]
+    },
+    {
+        "007": [
+            "M\u00e9ganium",
+            "Le parfum de la fleur de M\u00e9ganium apaise et calme les esprits. Pendant les combats, ce Pok\u00e9mon \u00e9met son parfum relaxant pour att\u00e9nuer l\u2019agressivit\u00e9 de l\u2019ennemi."
+        ]
+    },
+    {
+        "008": [
+            "Typhlosion",
+            "Ce Pok\u00e9mon attaque \u00e0 l\u2019aide de flammes explosives. Il se dissimule derri\u00e8re la brume produite par la chaleur intense de ses flammes."
+        ]
+    },
+    {
+        "009": [
+            "Aligatueur",
+            "Aligatueur impressionne ses ennemis en ouvrant son \u00e9norme gueule. Pendant les combats, il pi\u00e9tine le sol de ses puissantes pattes arri\u00e8re avant de charger ses adversaires \u00e0 pleine vitesse."
+        ]
+    },
+    {
+        "010": [
+            "Pharamp",
+            "La lumi\u00e8re vive sur sa queue est visible de loin. Les \u00eatres humains le tiennent en haute estime, car sa lumi\u00e8re les guide depuis les temps anciens."
+        ]
+    },
+    {
+        "011": [
+            "Tyranocif",
+            "Ce Pok\u00e9mon est si fort qu\u2019il est capable de modifier la topographie d\u2019un lieu. Il ne se pr\u00e9occupe pas des autres."
+        ]
+    },
+    {
+        "012": [
+            "Suicune",
+            "Suicune incarne la tranquillit\u00e9 d\u2019une source d\u2019eau pure. Il parcourt les plaines avec gr\u00e2ce. Ce Pok\u00e9mon a le pouvoir de purifier l\u2019eau."
+        ]
+    },
+    {
+        "013": [
+            "Jungko",
+            "Les feuilles qui poussent sur le corps de Jungko sont extr\u00eamement tranchantes. Ce Pok\u00e9mon est tr\u00e8s agile. Il bondit de branche en branche avant de sauter sur son ennemi."
+        ]
+    },
+    {
+        "014": [
+            "Bras\u00e9gali",
+            "Au combat, Bras\u00e9gali envoie des flammes ardentes de ses poignets. Il fait preuve d\u2019un courage exceptionnel. Plus l\u2019ennemi est puissant, plus les poignets de ce Pok\u00e9mon sont ardents."
+        ]
+    },
+    {
+        "015": [
+            "Laggron",
+            "Laggron est tr\u00e8s fort. Tellement fort qu\u2019il peut ais\u00e9ment tirer un rocher pesant plus d\u2019une tonne. Ce Pok\u00e9mon est \u00e9galement dot\u00e9 d\u2019une vue si efficace qu\u2019il peut m\u00eame voir \u00e0 travers l\u2019eau trouble."
+        ]
+    },
+    {
+        "016": [
+            "Elecsprint",
+            "Il diffuse de l\u2019\u00e9lectricit\u00e9 dans ses membres pour augmenter sa vitesse. C\u2019est \u00e9galement ainsi qu\u2019il apaise ses douleurs musculaires."
+        ]
+    },
+    {
+        "017": [
+            "Galeking",
+            "Il terrasse ses ennemis en chargeant et en donnant des coups avec ses cornes ac\u00e9r\u00e9es capables de transpercer des plaques de fer \u00e9paisses."
+        ]
+    },
+    {
+        "018": [
+            "Drattak",
+            "Il fend l\u2019air et virevolte dans le ciel gr\u00e2ce \u00e0 ses ailes fra\u00eechement form\u00e9es. De bonheur, il crache du feu et d\u00e9vaste tout sur son passage."
+        ]
+    },
+    {
+        "019": [
+            "Torterra",
+            "Autrefois, les gens pensaient qu\u2019un gigantesque Torterra vivait sous la surface de la Terre."
+        ]
+    },
+    {
+        "020": [
+            "Simiabraz",
+            "Sa couronne de feu trahit son temp\u00e9rament bouillant. Sa vitesse est in\u00e9gal\u00e9e."
+        ]
+    },
+    {
+        "021": [
+            "Pingol\u00e9on",
+            "Il nage aussi vite qu\u2019un hors-bord. Le tranchant de ses ailes peut fendre un bloc de glace \u00e0 la d\u00e9rive."
+        ]
+    },
+    {
+        "022": [
+            "Etouraptor",
+            "Quand \u00c9tourvol \u00e9volue en \u00c9touraptor, il quitte son groupe pour vivre seul. Ses ailes sont tr\u00e8s souples et puissantes."
+        ]
+    },
+    {
+        "023": [
+            "Luxray",
+            "Il est capable de voir \u00e0 travers les murs pour chasser des proies ou retrouver ses petits s\u2019ils s\u2019\u00e9garent."
+        ]
+    },
+    {
+        "024": [
+            "Lucario",
+            "On dit qu\u2019il peut rep\u00e9rer ses ennemis, m\u00eame lorsqu\u2019ils sont invisibles, car il ressent leur aura."
+        ]
+    },
+    {
+        "025": [
+            "Majaspic",
+            "Il ne donnera tout son potentiel que contre un ennemi puissant indiff\u00e9rent \u00e0 son regard \u00e9crasant de noblesse."
+        ]
+    },
+    {
+        "026": [
+            "Roitiflam",
+            "Il embrase ses poings avec les flammes sur son menton et cogne l\u2019ennemi avec. C\u2019est un Pok\u00e9mon tr\u00e8s solidaire."
+        ]
+    },
+    {
+        "027": [
+            "Clamiral",
+            "Il dissimule de grandes lames qu\u2019il d\u00e9gaine en un \u00e9clair des fourreaux de ses pattes ant\u00e9rieures."
+        ]
+    },
+    {
+        "028": [
+            "Brutapode",
+            "Apr\u00e8s avoir saisi sa proie \u00e0 l\u2019aide des griffes de son cou, il la plaque au sol puis la transperce avec ses \u00e9pines empoisonn\u00e9es."
+        ]
+    },
+    {
+        "029": [
+            "Trioxhydre",
+            "Seule sa t\u00eate centrale est dot\u00e9e d\u2019un cerveau. Ce Pok\u00e9mon est tr\u00e8s intelligent, mais il ne pense qu\u2019\u00e0 tout d\u00e9truire."
+        ]
+    },
+    {
+        "030": [
+            "Zoroark",
+            "On dit que ceux qui osent tenter de le capturer restent prisonniers des paysages illusoires qu\u2019il peut cr\u00e9er."
+        ]
+    },
+    {
+        "031": [
+            "Blind\u00e9pique",
+            "Il est si puissant qu\u2019il pourrait renverser un char de 50 t d\u2019un seul assaut. Il se sert de son corps comme d\u2019un bouclier pour prot\u00e9ger ses alli\u00e9s."
+        ]
+    },
+    {
+        "032": [
+            "Goupelin",
+            "Peut pr\u00e9dire l\u2019avenir s\u2019il se concentre en fixant la flamme qui danse au bout de sa canne."
+        ]
+    },
+    {
+        "033": [
+            "Amphinobi",
+            "Il transforme des jets d\u2019eau sous pression en redoutables shuriken. Une fois lanc\u00e9s, ils tournent si vite qu\u2019ils peuvent m\u00eame couper le m\u00e9tal."
+        ]
+    },
+    {
+        "034": [
+            "Flambusard",
+            "Ce Pok\u00e9mon excelle dans l\u2019art de voler. Il est m\u00eame capable de transporter une proie de plus de 100 kg sans sourciller."
+        ]
+    },
+    {
+        "035": [
+            "Nymphali",
+            "Ses antennes en forme de ruban \u00e9mettent des ondes apaisantes en direction de ses adversaires et neutralisent toute hostilit\u00e9."
+        ]
+    },
+    {
+        "036": [
+            "Muplodocus",
+            "Ce Pok\u00e9mon au temp\u00e9rament doux adore la pluie. Lorsqu\u2019il se prom\u00e8ne dans la nature, il savoure chaque averse."
+        ]
+    },
+    {
+        "037": [
+            "Archeduc",
+            "Les plumes de ses ailes lui servent de fl\u00e8ches. Sa pr\u00e9cision au tir est si grande qu\u2019il peut atteindre un gravillon \u00e0 100 m."
+        ]
+    },
+    {
+        "038": [
+            "F\u00e9linferno",
+            "Un Pok\u00e9mon brutal qui n\u2019en fait qu\u2019\u00e0 sa t\u00eate. Selon son humeur du moment, il lui arrive parfois d\u2019ignorer sciemment les ordres de son Dresseur."
+        ]
+    },
+    {
+        "039": [
+            "Oratoria",
+            "Pour lui, le combat est une performance artistique. Il chante et danse de toute son \u00e2me pour abattre ses proies."
+        ]
+    },
+    {
+        "040": [
+            "Lucanon",
+            "L\u2019\u00e9lectricit\u00e9 qu\u2019il produit dans son ventre s\u2019accumule dans ses larges mandibules. Il la lib\u00e8re sous forme d\u2019un rayon puissant."
+        ]
+    },
+    {
+        "041": [
+            "Lougaroc",
+            "Il attaque ses proies \u00e0 l\u2019aide de ses griffes et de ses crocs ac\u00e9r\u00e9s. Il ob\u00e9ira toujours \u00e0 son Dresseur s\u2019il lui fait confiance."
+        ]
+    },
+    {
+        "042": [
+            "Ekaiser",
+            "Quand il rencontre un ennemi, il fait sonner les \u00e9cailles de sa queue pour l\u2019intimider. Il n\u2019affronte que ceux qui ne se laissent pas impressionner."
+        ]
+    },
+    {
+        "043": [
+            "Gorythmic",
+            "Il contr\u00f4le le pouvoir de sa souche singuli\u00e8re en tapant en rythme dessus. Il se bat en manipulant des racines."
+        ]
+    },
+    {
+        "044": [
+            "Pyrobut",
+            "Il drible avec des pierres pour en faire des ballons enflamm\u00e9s, avant de tirer sur ses adversaires pour les br\u00fbler."
+        ]
+    },
+    {
+        "045": [
+            "L\u00e9zargus",
+            "Il a plus d\u2019un tour dans son sac : il peut tirer des gerbes d\u2019eau du bout de ses doigts et planer dans les airs gr\u00e2ce \u00e0 ses membranes dorsales."
+        ]
+    },
+    {
+        "046": [
+            "Corvaillus",
+            "Il ne peut pas servir de taxi dans le ciel de Paldea en raison des attaques de ses adversaires, qui pourraient mettre sa client\u00e8le en danger."
+        ]
+    },
+    {
+        "047": [
+            "Salarsen",
+            "Beaucoup de jeunes admirent son attitude imperturbable face \u00e0 n\u2019importe quel adversaire et la nonchalance avec laquelle il cherche la bagarre."
+        ]
+    },
+    {
+        "048": [
+            "Lanssorien",
+            "Il est capable de devenir transparent en se concentrant intens\u00e9ment. M\u00eame les Fantyrm nich\u00e9s dans ses cornes deviennent alors invisibles."
+        ]
+    },
+    {
+        "049": [
+            "Miascarade",
+            "Il se sert de la r\u00e9verb\u00e9ration de la lumi\u00e8re sur la fourrure de sa cape pour camoufler sa tige, ce qui donne l\u2019illusion que sa fleur flotte dans les airs."
+        ]
+    },
+    {
+        "050": [
+            "Flamigator",
+            "Quand il chante, son oiseau de feu change de forme. Cet oiseau serait n\u00e9 lorsqu\u2019une \u00e2me a pris possession de sa boule de feu."
+        ]
+    },
+    {
+        "051": [
+            "Palmaval",
+            "Il peut propulser un camion dans les airs d\u2019un simple coup de pied. Ses puissantes pattes lui permettent aussi d\u2019ex\u00e9cuter des danses insolites."
+        ]
+    },
+    {
+        "052": [
+            "Pohmarmotte",
+            "D\u2019ordinaire, ce Pok\u00e9mon est plut\u00f4t calme, mais lorsqu\u2019il se bat, il \u00e9limine ses adversaires avec des mouvements rapides comme l\u2019\u00e9clair."
+        ]
+    },
+    {
+        "053": [
+            "Forgelina",
+            "Ce Pok\u00e9mon tr\u00e8s intelligent et hardi jette des rochers dans les airs puis les frappe avec son marteau en visant les Corvaillus qui volent."
+        ]
+    },
+    {
+        "054": [
+            "Glaivodo",
+            "L\u2019air qu\u2019il crache est tellement froid qu\u2019il peut geler instantan\u00e9ment du magma en fusion."
+        ]
+    }
+]
