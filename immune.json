@@ -1,0 +1,38 @@
+[
+    {
+        "Acier": [
+            "Poison"
+        ]
+    },
+    {
+        "Fée": [
+            "Dragon"
+        ]
+    },
+    {
+        "Normal": [
+            "Spectre"
+        ]
+    },
+    {
+        "Sol": [
+            "Electrik"
+        ]
+    },
+    {
+        "Spectre": [
+            "Combat",
+            "Normal"
+        ]
+    },
+    {
+        "T\u00e9n\u00e8bres": [
+            "Psy"
+        ]
+    },
+    {
+        "Vol": [
+            "Sol"
+        ]
+    }
+]

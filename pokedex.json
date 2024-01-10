@@ -58,7 +58,6 @@
     },
     {
         "006": [
-            "006",
             [
                 "Lokhlass",
                 "Il adore traverser les mers en portant des \u00eatres humains ou des Pok\u00e9mon sur son dos, et il comprend le langage humain."
@@ -71,7 +70,6 @@
     },
     {
         "007": [
-            "007",
             [
                 "M\u00e9ganium",
                 "Le parfum de la fleur de M\u00e9ganium apaise et calme les esprits. Pendant les combats, ce Pok\u00e9mon \u00e9met son parfum relaxant pour att\u00e9nuer l\u2019agressivit\u00e9 de l\u2019ennemi."
@@ -122,7 +120,7 @@
             ],
             [
                 "Roche",
-                "T\u00e9n\u00e8bre"
+                "T\u00e9n\u00e8bres"
             ]
         ]
     },
@@ -268,7 +266,6 @@
     },
     {
         "024": [
-            "024",
             [
                 "Lucario",
                 "On dit qu\u2019il peut rep\u00e9rer ses ennemis, m\u00eame lorsqu\u2019ils sont invisibles, car il ressent leur aura."
@@ -332,7 +329,7 @@
                 "Seule sa t\u00eate centrale est dot\u00e9e d\u2019un cerveau. Ce Pok\u00e9mon est tr\u00e8s intelligent, mais il ne pense qu\u2019\u00e0 tout d\u00e9truire."
             ],
             [
-                "T\u00e9n\u00e8bre",
+                "T\u00e9n\u00e8bres",
                 "Dragon"
             ]
         ]
@@ -344,7 +341,7 @@
                 "On dit que ceux qui osent tenter de le capturer restent prisonniers des paysages illusoires qu\u2019il peut cr\u00e9er."
             ],
             [
-                "T\u00e9n\u00e8bre"
+                "T\u00e9n\u00e8bres"
             ]
         ]
     },
@@ -380,7 +377,7 @@
             ],
             [
                 "Eau",
-                "T\u00e9n\u00e8bre"
+                "T\u00e9n\u00e8bres"
             ]
         ]
     },
@@ -438,7 +435,7 @@
             ],
             [
                 "Feu",
-                "T\u00e9n\u00e8bre"
+                "T\u00e9n\u00e8bres"
             ]
         ]
     },
@@ -566,7 +563,7 @@
             ],
             [
                 "Plante",
-                "T\u00e9n\u00e8bre"
+                "T\u00e9n\u00e8bres"
             ]
         ]
     },

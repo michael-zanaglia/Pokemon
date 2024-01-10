@@ -1,0 +1,131 @@
+[
+    {
+        "Acier": [
+            "Acier",
+            "Dragon",
+            "F\u00e9e",
+            "Glace",
+            "Insecte",
+            "Normal",
+            "Plante",
+            "Psy",
+            "Roche",
+            "Vol"
+        ]
+    },
+    {
+        "Combat": [
+            "Insecte",
+            "Roche",
+            "T\u00e9n\u00e8bres"
+        ]
+    },
+    {
+        "Dragon": [
+            "Eau",
+            "Electrik",
+            "Feu",
+            "Plante"
+        ]
+    },
+    {
+        "Eau": [
+            "Acier",
+            "Eau",
+            "Feu",
+            "Glace"
+        ]
+    },
+    {
+        "Electrik": [
+            "Acier",
+            "Electrik",
+            "Vol"
+        ]
+    },
+    {
+        "F\u00e9e": [
+            "Combat",
+            "Insecte",
+            "T\u00e9n\u00e8bres"
+        ]
+    },
+    {
+        "Feu": [
+            "Acier",
+            "F\u00e9e",
+            "Feu",
+            "Glace",
+            "Insecte",
+            "Plante"
+        ]
+    },
+    {
+        "Glace": [
+            "Glace"
+        ]
+    },
+    {
+        "Insecte": [
+            "Combat",
+            "Plante",
+            "Sol"
+        ]
+    },
+    {
+        "Plante": [
+            "Eau",
+            "Electrik",
+            "Plante",
+            "Sol"
+        ]
+    },
+    {
+        "Poison": [
+            "Combat",
+            "F\u00e9e",
+            "Insecte",
+            "Plante",
+            "Poison"
+        ]
+    },
+    {
+        "Psy": [
+            "Combat",
+            "Psy"
+        ]
+    },
+    {
+        "Roche": [
+            "Feu",
+            "Normal",
+            "Poison",
+            "Vol"
+        ]
+    },
+    {
+        "Sol": [
+            "Poison",
+            "Roche"
+        ]
+    },
+    {
+        "Spectre": [
+            "Insecte",
+            "Poison"
+        ]
+    },
+    {
+        "T\u00e9n\u00e8bres": [
+            "Spectre",
+            "T\u00e9n\u00e8bres"
+        ]
+    },
+    {
+        "Vol": [
+            "Combat",
+            "Insecte",
+            "Plante"
+        ]
+    }
+]

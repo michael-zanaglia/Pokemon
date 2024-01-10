@@ -1,0 +1,125 @@
+[
+    {
+        "Acier": [
+            "Combat",
+            "Feu",
+            "Sol"
+        ]
+    },
+    {
+        "Combat": [
+            "F\u00e9e",
+            "Psy",
+            "Vol"
+        ]
+    },
+    {
+        "Dragon": [
+            "Dragon",
+            "F\u00e9e",
+            "Glace"
+        ]
+    },
+    {
+        "Eau": [
+            "Electrik",
+            "Plante"
+        ]
+    },
+    {
+        "Electrik": [
+            "Sol"
+        ]
+    },
+    {
+        "F\u00e9e": [
+            "Acier",
+            "Poison"
+        ]
+    },
+    {
+        "Feu": [
+            "Eau",
+            "Roche",
+            "Sol"
+        ]
+    },
+    {
+        "Glace": [
+            "Acier",
+            "Combat",
+            "Feu",
+            "Roche"
+        ]
+    },
+    {
+        "Insecte": [
+            "Feu",
+            "Roche",
+            "Vol"
+        ]
+    },
+    {
+        "Normal": [
+            "Combat"
+        ]
+    },
+    {
+        "Plante": [
+            "Feu",
+            "Glace",
+            "Insecte",
+            "Poison",
+            "Vol"
+        ]
+    },
+    {
+        "Poison": [
+            "Psy",
+            "Sol"
+        ]
+    },
+    {
+        "Psy": [
+            "Insecte",
+            "Spectre",
+            "T\u00e9n\u00e8bres"
+        ]
+    },
+    {
+        "Roche": [
+            "Acier",
+            "Combat",
+            "Eau",
+            "Plante",
+            "Sol"
+        ]
+    },
+    {
+        "Sol": [
+            "Eau",
+            "Glace",
+            "Plante"
+        ]
+    },
+    {
+        "Spectre": [
+            "Spectre",
+            "T\u00e9n\u00e8bres"
+        ]
+    },
+    {
+        "T\u00e9n\u00e8bres": [
+            "Combat",
+            "F\u00e9e",
+            "Insecte"
+        ]
+    },
+    {
+        "Vol": [
+            "Electrik",
+            "Glace",
+            "Roche"
+        ]
+    }
+]
