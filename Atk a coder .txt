@@ -1,0 +1,18 @@
+Atk a coder :
+
+Lame de Roc   	\\\\\\\\\Taux crit elever
+Lame-Feuille	\\\\\\\\\Taux crit elever
+Magie Florale	\\\\\\\\\Taux crit 100%
+
+
+
+Chant Flamboyant BoostAtkSpe
+Mach Punch	Priorite +1
+Marteau Mastoc	BaisseLaDef, BaisseAtk, Mutiler
+Charge Glaive	Mutiler
+Luminocanon	ChanceDiminuerDefSpe de la cible ----
+
+
+
+
+
