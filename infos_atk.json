@@ -6,7 +6,7 @@
             0,
             "Plante",
             "Sp\u00e9ciale",
-            "HealAfterFight"
+            "HealAfterFightEffect"
         ]
     },
     {
@@ -143,10 +143,10 @@
         "Bluff": [
             40,
             100,
-            3,
+            0,
             "Normal",
             "Physique",
-            "Peur"
+            "Bluff"
         ]
     },
     {
@@ -216,7 +216,7 @@
             0,
             "Normal",
             "Statut",
-            "NoneRequiem"
+            "Requiem"
         ],
         "Draco_Queue": [
             60,
@@ -233,8 +233,8 @@
             90,
             0,
             "Poison",
-            "Sp\u00e9ciale",
-            "PoisonendEffect"
+            "Statut",
+            "PoisonedEffect"
         ]
     },
     {
@@ -344,7 +344,7 @@
             0,
             "Combat",
             "Physique",
-            ["BaisseLaDef", "BaisseLaDefSpe"]
+            ["BaisseLaDef", "BaisseLaDef_spe"]
         ]
     },
     {
@@ -414,7 +414,7 @@
             0,
             "Sol",
             "Physique",
-            "Invinsible"
+            "Invincible"
         ]
     },
     {
@@ -604,7 +604,7 @@
             0,
             "T\u00e9n\u00e8bres",
             "Physique",
-            "None"
+            "Peur"
         ]
     },
     {

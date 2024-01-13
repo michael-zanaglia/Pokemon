@@ -48,6 +48,12 @@ class Pokemon():
         self.liste_atk = self.ListeAttaques()
         self.weak, self.res, self.immune = self.OpenJson()
         self.pkm_faiblesse, self.pkm_double, self.pkm_resistance, self.pkm_double_res, self.pkm_immune = self.FoundWeakness()
+        self.statut = ""
+        self.etat_ephemere = ""
+        self.alteration = False
+        self.count_poison = 0
+        self.count_brulure = 0
+        self.counting_bluff = 0
     
     def NumPokedex(self) :
         #j'ouvre un fichier JSON. si je trouve le nom du pokemon il me retourne son numero associe.
@@ -116,8 +122,13 @@ class Pokemon():
             liste_res, liste_weak = self.UpdateTypes(liste_res, liste_weak)
             liste_weak, liste_res = self.UpdateTypes(liste_weak, liste_res)
         
+        
             # Si un pokemon possede une imunité il doit lui etre retourné.
             liste_immune = self.Immunise(liste_immune)          
+            for x in liste_weak :
+                if x in liste_immune :
+                    liste_weak.remove(x)
+                    
             
         # Si j'ai 1 type :                           
         else :
@@ -198,7 +209,7 @@ class Pokemon():
         for pokemons in file :
             for k,v in pokemons.items() :
                 if self.nom == k :
-                    hp = int(v[0])
+                    hp = int(int(v[0]))
                     atk = int(v[1])
                     defe = int(v[2])
                     atk_spe = int(v[3])
@@ -310,7 +321,7 @@ class Pokemon():
     
     
 class Attaque():
-    def __init__(self, nom, puissance, precision, type, categorie, priorite, effect):
+    def __init__(self, nom, puissance, precision, type, categorie, priorite, effect, pkm1, pkm2):
         self.nom = nom
         self.type = type
         self.puissance = puissance
@@ -318,6 +329,10 @@ class Attaque():
         self.categorie = categorie
         self.priorite = priorite
         self.effect = effect
+        self.my_pkm = pkm1
+        self.pkm_foe = pkm2
+        self.stock = 0 
+        self.count_para = 0
         
         
 ########################################### EFFETS GLOBALS ###########################################
@@ -328,131 +343,146 @@ class Attaque():
         for x in range(0,101):
             liste.append(x)
         choice = random.choice(liste)
-        if choice < 10 :
-            if status == "GEL" :
-                self.GelEffect()
-            if choice <= 20 :
+        if self.pkm_foe.alteration == False or self.pkm_foe.alteration != "PSN" or self.pkm_foe.alteration != "BRU" :
+            if choice < 10 :
+                if status == "GEL" :
+                    print(f"{self.pkm_foe.nom} est gelé.")
+                    self.GelEffect(self.pkm_foe)
+            elif choice <= 20 :
                 if status == "PSN" :
-                    self.PoisonedEffect()
+                    print(f"{self.pkm_foe.nom} est empoisonné.")
+                    self.PoisonedEffect(self.pkm_foe)
                 elif status == "BRU" :
-                    self.BruleEffect()
+                    print(f"{self.pkm_foe.nom} est brulé.")
+                    self.BruleEffect(self.pkm_foe)
                 elif status == "PAR" :
-                    self.ParalysedEffect()
-                elif status == "SLP" :
-                    self.SleepEffect()
+                    print(f"{self.pkm_foe.nom} est paralysé.")
+                    self.ParalysedEffect(self.pkm_foe)
+            else :
+                print("Pas d'effet ce coup ci !")
+        else :
+            print("Deja un statut")
     
-    def PoisonedEffect(self) :
-        count = 0
+    def PoisonedEffect(self, cible) :
         # Chaque fin de tour code partiellement fait
-        if Pokemon.hp != 0 :
-            if count == 0 :
-                Pokemon.hp -= int((Pokemon.hp*10)/100)
-                count += 1
-            elif count == 1 :
-                Pokemon.hp -= int((Pokemon.hp*12)/100)
-                count += 1
-            elif count >= 2 :
-                Pokemon.hp -= int((Pokemon.hp*16)/100)
-                count += 1
+        if cible.hp != 0 :
+            cible.alteration = "PSN"
+            if cible.count_poison == 0 :
+                cible.hp -= int((cible.hp*10)/100)
+                print(f" Count a 0, Inflige Poison sur {cible.nom} ... HP restant {cible.hp}:")
+                cible.statut = "PSN"
+            elif cible.count_poison == 1 :
+                cible.hp -= int((cible.hp*12)/100)
+            elif cible.count_poison >= 2 :
+                cible.hp -= int((cible.hp*16)/100)
                 
-    def BruleEffect(self) :
+    def BruleEffect(self, cible) :
         # Chaque fin de tour code partiellement fait
-        one_time = 0
-        while Pokemon.hp != 0 :
-            Pokemon.hp -= int((Pokemon.hp*7)/100)
-            if one_time == 0 :
-                Pokemon.atk -= int((Pokemon.atk*20)/100)
-                Pokemon.atk_spe -= int((Pokemon.atk_spe*20)/100)
+        self.stock = cible.atk
+        #print(f"Brule eff {cible.atk}")
+        if cible.hp != 0 :
+                cible.atk -= int((cible.atk*20)/100)
+                #print(f"Brule eff juste apres {cible.atk}")
+        cible.statut = "BRU"
     
-    def ParalysedEffect(self) :
-        count = 0
+    def ParalysedEffect(self, cible) :
         liste_play = [1,2,3]
         liste_time = [1,2,3,4,5,6]
-        while True :
-            if count == 0 :
-                Pokemon.vit = int(Pokemon.vit/3)
-                choice_play = random.choice(liste_play)
-                if choice_play < 3 :
-                    # Message pour dire que le pokemon n'a pas pu attaquer
-                    self.precision == 0
-                count += 1
+        paralyzed = True
+        if paralyzed :
+            if self.count_para == 0 :
+                self.stock = cible.vit
+                cible.vit = int(cible.vit/3)
+            self.count_para = 1
+            choice_play = random.choice(liste_play)
+            if choice_play <= 3 :
+                # Message pour dire que le pokemon n'a pas pu attaquer
+                print(f"{cible.nom} Paralysed")
+                cible.alteration = True
+                cible.statut = "PAR"
             choice_time = random.choice(liste_time)
-            if choice_time < 5 :
-                count = 0
+            if choice_time >= 5 :
+                print(f"{cible.nom} plus Paralysed")
+                paralyzed = not paralyzed
+                cible.vit = self.stock
+                cible.alteration = False
+                cible.statut = ""
+                
+    def SleepEffect(self, cible) :
+        liste_play = [1,2,3,4,5,6,7,8,9,10]
+        spleeping = True
+        if spleeping :
+            choice_play = random.choice(liste_play)
+            if choice_play <= 9 :
+                    print(f"{cible.nom} est endromie")
+                    cible.alteration = True
+                    cible.statut = "SLP"
             else :
-                # Pokemon n'est plus paralyse... peut etre faire une fonction qui supprime un statut ?
-                break
-    
-    def SleepEffect(self) :
-        count = 0
-        liste_play = [1,2,3]
-        liste_time = [1,2,3,4,5]
-        while True :
-            if count == 0 :
-                choice_play = random.choice(liste_play)
-                if choice_play in liste_play :
-                    # Message pour dire que le pokemon n'a pas pu attaquer
-                    self.precision == 0
-                count += 1
-            choice_time = random.choice(liste_time)
-            if choice_time < 4 :
-                count = 0
-            else :
-                # Pokemon n'est plus endormi... peut etre faire une fonction qui supprime un statut ?
-                break
-    def GelEffect(self) :
-            count = 0
+                print(f"{cible.nom} est endromie")
+                spleeping = not spleeping
+                cible.alteration = False
+                cible.statut = ""
+    def GelEffect(self, cible) :
             liste_play = [1,2,3]
             liste_time = [1,2,3,4,5,6]
-            while True :
-                if count == 0 :
-                    choice_play = random.choice(liste_play)
-                    if choice_play in liste_play :
-                        # Message pour dire que le pokemon n'a pas pu attaquer
-                        self.precision == 0
-                    count += 1
-                choice_time = random.choice(liste_time)
-                if choice_time < 4 :
-                    count = 0
-                else :
-                    # Pokemon n'est plus gele... peut etre faire une fonction qui supprime un statut ?
-                    break
+            gel = True
+            if gel :
+                choice_play = random.choice(liste_play)
+                if choice_play in liste_play :
+                    print(f"{cible.nom} Geler")
+                    cible.alteration = True
+                    cible.statut = "GEL"
+            choice_time = random.choice(liste_time)
+            if choice_time == 6 :
+                print(f"{cible.nom} plus Geler")
+                gel = not gel
+                cible.alteration = False
+                cible.statut = ""
         ### STATUS EFFECT ###
         
     
 #/!\ Verifier si le heal rend plus que les pv max du pokemon, je dois renvoyer la valeur de base
-    def HealAfterFightEffect(self) :
+    def HealAfterFightEffect(self, cible, dgt) :
         with open("statistic.json", "r") as stat :
             file = json.load(stat)
         for pokemons in file :
             for k,v in pokemons.items() :
-                if Pokemon.nom == k :
-                    if Pokemon.hp != v[0] :
-                        Pokemon.hp += self.CalculDegat() / 2
+                if cible.nom == k :
+                    if cible.hp != int(v[0]) :
+                        print(int(v[0]))
+                        cible.hp += int(dgt / 2)
+                        if cible.hp > int(v[0]) :
+                            cible.hp = int(v[0])
     
-    def HealEffect(self) :
+    def HealEffect(self, cible) :
         with open("statistic.json", "r") as stat :
             file = json.load(stat)
         for pokemons in file :
             for k,v in pokemons.items() :
-                if Pokemon.nom == k :
-                    if Pokemon.hp != v[0] :
-                        Pokemon.hp += int(Pokemon.hp*10) / 100
+                if cible.nom == k :
+                    if cible.hp != int(v[0]) :
+                        cible.hp += int(int(v[0])*20) / 100
+                        if cible.hp >= int(v[0]) :
+                            cible.hp = int(v[0])
                         
-    def AtterissageEffect(self) :
+    def AtterissageEffect(self, cible) :
         with open("statistic.json", "r") as stat :
             file = json.load(stat)
         for pokemons in file :
             for k,v in pokemons.items() :
-                if Pokemon.nom == k :
-                    if Pokemon.hp != v[0] :
-                        Pokemon.hp = Pokemon.hp * 2
+                if cible.nom == k :
+                    if cible.hp != int(v[0]) :
+                        cible.hp += int(int(v[0])*50) / 100
+                        if cible.hp > int(v[0]) :
+                            cible.hp = int(v[0])
     
 #/!\ Verifier si le pokemon ne s'enleve pas plus de 0 sinon affiche 0    
-    def MutilerEffect(self) :
-        Pokemon.hp -= int(Pokemon.hp*30) / 100
+    def MutilerEffect(self, cible) :
+        cible.hp -= int(cible.hp*35) / 100
+        if cible.hp < 0 :
+            cible.hp = 0
         
-    def BoostDefSpeTeam(self) :
+    def BoostDefSpeTeam(self) : ############################### Apres avoir creer l'equipe
         count = 0
         while count != 5 :
             # Pour chaque Pokemon de l'equipe x2 DefSpe pendant 5 tours
@@ -465,69 +495,103 @@ class Attaque():
                 if Pokemon.nom == k :
                     Pokemon.def_spe = v[4]
                     
-    def BoostDef(self) :
-        Pokemon.defense = int(Pokemon.defense*1.5)
+    def BoostDef(self, cible) :
+        cible.defense = int(cible.defense*1.5)
         
-    def BoostAtkSpe(self) :
-        Pokemon.atk_spe = int(Pokemon.atk_spe*1.5)
+    def BoostAtkSpe(self, cible) :
+        cible.atk_spe = int(cible.atk_spe*1.5)
     
-    def ChanceBoostDef(self) :
+    def ChanceBoostDef(self, cible) :
         liste = []
-        for x in range(0,101) :
+        for x in range(1,101) :
             liste.append(x)
         choice = random.choice(liste)
-        if choice <= 10 :
-            Pokemon.defense += int(Pokemon.defense/2)
+        if choice <= 35 :
+            print("La def augmente")
+            cible.defense += int(cible.defense/2)
     
+    def Peur(self, cible) :
+        if self.nom != "Dark Lariat" or self.nom != "Vibrobscur" :
+            cible.etat_ephemere = "PEUR"
+        else :
+            choose = random.randint(1,7) 
+            if choose == 5 :
+                cible.etat_ephemere = "PEUR"
+                
     
-    def Bluff(self) :
+    def Bluff(self, cible) :
         #Si c'est ta premiere attaque elle est prioritaire et apeure l'ennemie. Marche qu'une fois
-        pass
-    
-    def PauseEffect(self) :
-        #Si attaquer, prochain tour pause 
-        pass
-    
-    def ChanceDiminuerDef(self) :
-        liste = []
-        for x in range(0,101) :
-            liste.append(x)
-        choice = random.choice(liste)
-        if choice <= 20 :
-            Pokemon.defense -= int((Pokemon.defense*25)/100)
-            
-    def ChanceDiminuerDefSpe(self) :
-        liste = []
-        for x in range(0,101) :
-            liste.append(x)
-        choice = random.choice(liste)
-        if choice <= 20 :
-            Pokemon.def_spe -= int((Pokemon.def_spe*25)/100)
-            
-    def ChanceDiminuerAtkSpe(self) :
-        liste = []
-        for x in range(0,101) :
-            liste.append(x)
-        choice = random.choice(liste)
-        if choice <= 20 :
-            Pokemon.atk_spe -= int((Pokemon.atk_spe*25)/100)
-            
-    def ChanceDiminuerAtk(self) :
-        liste = []
-        for x in range(0,101) :
-            liste.append(x)
-        choice = random.choice(liste)
-        if choice <= 20 :
-            Pokemon.atk -= int((Pokemon.atk*25)/100)
-    
-    def BaisseLaDef_spe(self) :
-        Pokemon.def_spe -= int((Pokemon.def_spe*30)/100)
-    
-    def BaisseLaDef(self) :
-        Pokemon.defense -= int((Pokemon.defense*30)/100)
+        if self.my_pkm.counting_bluff == 0 :
+            self.Peur(cible)
+            self.my_pkm.counting_bluff = 1      
         
-    def BaisseAtk(self) :
-        Pokemon.atk -= int((Pokemon.atk*30)/100)
+
+                
+    
+    def PauseEffect(self,cible) :
+        cible.etat_ephemere = "PAUSE"
+        #Si attaquer, prochain tour pause 
+        
+    
+    def ChanceDiminuerDef(self, cible) :
+        liste = []
+        for x in range(1,101) :
+            liste.append(x)
+        choice = random.choice(liste)
+        if choice <= 20 :
+            cible.defense -= int((cible.defense*25)/100)
+            if cible.defense < 0 :
+                cible.defense = 0
+            
+    def ChanceDiminuerDefSpe(self, cible) :
+        liste = []
+        for x in range(0,101) :
+            liste.append(x)
+        choice = random.choice(liste)
+        if choice <= 20 :
+            cible.def_spe -= int((cible.def_spe*25)/100)
+            if cible.def_spe < 0 :
+                cible.def_spe = 0
+            
+    def ChanceDiminuerAtkSpe(self, cible) :
+        liste = []
+        for x in range(0,101) :
+            liste.append(x)
+        choice = random.choice(liste)
+        if choice <= 20 :
+            cible.atk_spe -= int((cible.atk_spe*25)/100)
+            if cible.atk_spe < 0 :
+                cible.atk_spe = 0
+            
+    def ChanceDiminuerAtk(self, cible) :
+        liste = []
+        for x in range(0,101) :
+            liste.append(x)
+        choice = random.choice(liste)
+        if choice <= 20 :
+            cible.atk -= int((cible.atk*25)/100)
+            if cible.atk < 0 :
+                cible.atk = 0
+    
+    def BaisseLaDef_spe(self, cible) :
+        cible.def_spe -= int((cible.def_spe*30)/100)
+        if cible.def_spe < 0 :
+            cible.def_spe = 0
+    
+    def BaisseLaDef(self, cible) :
+        cible.defense -= int((cible.defense*30)/100)
+        if cible.defense < 0 :
+            cible.defense = 0
+        
+    def BaisseAtk(self, cible) :
+        cible.atk -= int((cible.atk*30)/100)
+        if cible.atk < 0 :
+            cible.atk = 0
+    
+    def BaisseAtkSpe(self, cible) :
+        cible.atk_spe -= int((cible.atk_spe*30)/100)
+        if cible.atk_spe < 0 :
+            cible.atk_spe = 0
     
     def Requiem(self) :
         count = 0
@@ -539,21 +603,29 @@ class Attaque():
             pass
         count += 1
         
-    def Abri(self):
-        # Si pokemon adverse attaque et que abri renvoie True le pokemon est proteger
-        pass
+    def Abri(self, cible):
+        if cible.etat_ephemere == "" :
+            print(cible.nom,"se protege")
+            cible.etat_ephemere = "ABRI"
         
     def ChangePkm(self) :
         # Fonction qui permettera d'envoye un pokemon dont le type et plus fort ou neutre face a nous
         pass
     
-    def Colere(self) :
-        #Si variable de colere True et count != 3 alors la prochaine attaque sera tjrs colere sinon renvoie false
-        pass
+    def Colere(self, cible) :
+        if cible.etat_ephemere == "" :
+            cible.etat_ephemere = "ANGRY"
+        elif cible.etat_ephemere == "ANGRY" :
+            continued = random.randint(1,4)
+            if continued == 4 :
+                print("Sort de colere")
+                cible.etat_ephemere = ""
     
-    def Invincible(self) :
-        # Tour sans atk mais a la prochaine il atk en contre partie si l'adversaire lance une atk il la rate.
-        pass
+    def Invincible(self, cible) :
+        if cible.etat_ephemere == "" :
+            cible.etat_ephemere = "DISPARU"
+        else :
+            cible.etat_ephemere = ""
     
     def CoupBas(self) :
         #Si l'adversaire atq je frappe en premier mais si la priorite et == le pokemon avec la plus grand rapidite atq en premier
@@ -573,14 +645,19 @@ class Attaque():
         #Trouver un moyen de recuperer ensuite atk apres l'attaque
         pass
     
-    def CalculDegat(self, my_pkm, pkm_foe) :
+    def CalculDegat(self) :
         # Verifie la precision, si precision est true on passe a la verification suivante sinon renvoie atk echouer
         # Lorsque atk, verifie la categorie et en fonction effectue le calcule de dommage.
         # Lors du calcule de dommage verifie si taux crit si c'est le cas effectue le double des degats 
         # Et si le type de l'attaque et efficace ou non mettre a jour les degat
         test_precision = []
+        echouer = False
         crit = []
-        if my_pkm.hp != 0 and pkm_foe.hp != 0 :
+        if self.my_pkm.hp != 0 and self.pkm_foe.hp != 0 :
+            if self.my_pkm.statut == "GEL":
+                self.GelEffect(self.my_pkm)
+            elif self.my_pkm == "PAR" :
+                self.ParalysedEffect(self.my_pkm)
             critprint = False
             for x in range(1,101) :
                 test_precision.append(x)
@@ -588,72 +665,210 @@ class Attaque():
                 crit.append(y)
             choice_crit = random.choice(crit)
             choice_tp = random.choice(test_precision)
-            if choice_tp <= self.precision :
-                if self.categorie == "Physique" :
-                    dgt = my_pkm.niv*0.4+2*((self.puissance * my_pkm.atk) / (pkm_foe.defense * 50) + 2 )
-                elif self.categorie == "Spéciale" :
-                    dgt = my_pkm.niv*0.4+2*((self.puissance * my_pkm.atk_spe) / (pkm_foe.def_spe * 50) + 2 )
-                if choice_crit == 1 :
-                    dgt *= 1.95
-                    critprint = True
-                if self.type in pkm_foe.pkm_faiblesse :
-                    dgt *= 1.95
-                    print("Super Efficace !")
-                elif self.type in pkm_foe.pkm_double :
-                    dgt *= 3.9
-                    print("Mega Efficace !")
-                elif self.type in pkm_foe.pkm_resistance :
-                    dgt *= 0.5
-                    print("Pas Efficace ...")
-                elif self.type in pkm_foe.pkm_double_res :
-                    dgt *= 0.25
-                    print("Tres Peu Efficace ...")
-                elif self.type in pkm_foe.pkm_immune :
-                    dgt *= 0
-                    print(f"{pkm_foe.nom} n'est pas affecté...")
-                else :
-                    dgt *= 1       
-                pkm_foe.hp -= int(dgt)
-                
-                self.VerifierEffect()
-                
-                if pkm_foe.hp < 0 :
-                    pkm_foe.hp = 0
-                print(f"{my_pkm.nom} attaque {pkm_foe.nom} avec {self.nom} : {pkm_foe.hp} restant apres l'attaque.")
-                if critprint :
-                    print("Coup Critique !")
-                    critprint = False 
-            else : 
-                print(f"{my_pkm.nom} : Votre attaque a echoué")                
+            if self.my_pkm.etat_ephemere == "" or self.my_pkm.etat_ephemere == "DISPARU" or self.my_pkm.etat_ephemere == "ANGRY" or self.my_pkm.etat_ephemere == "ABRI": 
+                if self.my_pkm.alteration == False or self.my_pkm.alteration == "PSN" or self.my_pkm.alteration == "BRU"  :
+                    print(f"{self.my_pkm.nom} utilise avec {self.nom}")
+                    if choice_tp <= self.precision and self.pkm_foe.etat_ephemere != "DISPARU" :
+                        if self.categorie == "Physique" :
+                            dgt = self.my_pkm.niv*0.4+2*((self.puissance * self.my_pkm.atk) / (self.pkm_foe.defense * 50) + 2 )
+                        elif self.categorie == "Spéciale" :
+                            dgt = self.my_pkm.niv*0.4+2*((self.puissance * self.my_pkm.atk_spe) / (self.pkm_foe.def_spe * 50) + 2 )
+                        else :
+                            dgt = 0
+                        if self.pkm_foe.statut != "" and self.categorie == "Statut" :
+                            print("Votre attaque a echouer...") 
+                        elif self.categorie != "Statut" :
+                            if choice_crit == 1 :
+                                dgt *= 1.95
+                                critprint = True
+                            if self.type in self.pkm_foe.pkm_faiblesse :
+                                dgt *= 1.95
+                                print("Super Efficace !")
+                            elif self.type in self.pkm_foe.pkm_double :
+                                dgt *= 3.9
+                                print("Mega Efficace !")
+                            elif self.type in self.pkm_foe.pkm_resistance :
+                                dgt *= 0.5
+                                print("Pas Efficace ...")
+                            elif self.type in self.pkm_foe.pkm_double_res :
+                                dgt *= 0.25
+                                print("Tres Peu Efficace ...")
+                            elif self.type in self.pkm_foe.pkm_immune :
+                                dgt *= 0
+                                print(f"{self.pkm_foe.nom} n'est pas affecté...")
+                            else :
+                                dgt *= 1    
+                            if critprint :
+                                print("Coup Critique !")
+                                critprint = False   
+                        if self.pkm_foe.etat_ephemere == "ABRI" :  
+                            print(f"{self.pkm_foe.nom} est protege.")
+                            echouer = True
+                            self.pkm_foe.etat_ephemere == ""
+                        else : 
+                            self.pkm_foe.hp -= int(dgt)
+
+
+
+                        if self.pkm_foe.hp < 0 :
+                            self.pkm_foe.hp = 0
+                        if self.nom == "Tunnel" and self.my_pkm.etat_ephemere == "" :
+                                print("Le pokemon s'est cache sous la terre.")
+                                self.pkm_foe.hp += int(dgt)
+                        elif self.nom == "Tunnel" and self.my_pkm.etat_ephemere == "DISPARU" :
+                            print(f"{self.my_pkm.nom} sort de terre et attaque {self.pkm_foe.nom} avec {self.nom} : {self.pkm_foe.hp} restant apres l'attaque.")
+                        else :
+                            print(f"{self.my_pkm.nom} attaque {self.pkm_foe.nom} avec {self.nom} : {self.pkm_foe.hp} restant apres l'attaque.")
+
                         
-        if my_pkm.hp == 0 :
-            print(f"{pkm_foe.nom} a gagné. {my_pkm.nom} est KO !")
-        elif pkm_foe.hp == 0 :
-            print(f"{my_pkm.nom} a gagné. {pkm_foe.nom} est KO !")
+                        self.VerifierEffect(dgt, echouer)
+                    else : 
+                        print(f"{self.my_pkm.nom} : Votre attaque a echoué (precision)")   
+                        if self.my_pkm.etat_ephemere == "ABRI" :
+                            self.my_pkm.etat_ephemere = ""
+                                  
+                else :
+                
+                    print(f"{self.my_pkm.nom} : Votre attaque a echoué")  
+                    print(f"{self.pkm_foe.hp} restant apres l'attaque.")
+                
+            elif self.my_pkm.etat_ephemere == "PEUR" :
+                print(f"{self.my_pkm.nom} a eu peur. Il n'a pas pu attaquer.")
+                self.my_pkm.etat_ephemere = ""
+
+            elif self.my_pkm.etat_ephemere == "PAUSE" :
+                print(f"{self.my_pkm.nom} a lance une puissante attaque. Il doit prendre une pause.")
+                self.my_pkm.etat_ephemere = ""
+        
+                
+            
+            print(f"Mon pokemon {self.my_pkm.nom} ===> {self.my_pkm.statut}")
+            self.my_pkm.counting_bluff = 1
+                                          
+        if self.my_pkm.hp == 0 :
+            print(f"{self.pkm_foe.nom} a gagné. {self.my_pkm.nom} est KO !")
+            self.my_pkm.statut = ""
+            self.my_pkm.alteration = False
+            self.my_pkm.count_poison = 0
+            self.my_pkm.count_brulure = 0
+        elif self.pkm_foe.hp == 0 :
+            print(f"{self.my_pkm.nom} a gagné. {self.pkm_foe.nom} est KO !")
+            self.my_pkm.statut = ""
+            self.pkm_foe.alteration = False
+            self.pkm_foe.count_poison = 0
+            self.pkm_foe.count_brulure = 0
+        
     
-    
-    def VerifierEffect(self) :
+    def VerifierEffect(self, dgt, echouer) :
         if self.effect != "None" :
-            if self.categorie == "Statut" :
+            if not echouer : 
                 if self.effect == "GetStatutChance" :
                     if self.nom == "Bombe Beurk" or self.nom == "Direct Toxik" :
-                        print(self.nom)
-                        self.effect("PSN")
+                        fonction = eval(f"self.{self.effect}")
+                        fonction("PSN")
                     elif self.nom == "Lance-Flammes" or self.nom == "Déflagration" or self.nom == "Ebullition" or self.nom == "Poing Feu" or self.nom == "Crocs Feu" or self.nom == "Ballon Brulant":
-                        print(self.nom)
-                        self.effect("BRU")
-                    elif self.nom == "Tonnerre" or self.nom == "Electacle" or self.nom == "Poing Eclair" or self.nom == "Crocs Eclair" :
-                        print(self.nom)
-                        self.effect("PAR")
-                    elif self.nom == "Laser Glace" or self.nom == "Poing Glace" or self.nom == "Crocs Givre" :
-                        print(self.nom)
-                        self.effect("GEL")
+                        fonction = eval(f"self.{self.effect}")
+                        fonction("BRU")
+                    if self.nom == "Tonnerre" or self.nom == "Electacle" or self.nom == "Poing Eclair" or self.nom == "Crocs Eclair" and "Sol" not in self.pkm_foe.l_type :
+                        fonction = eval(f"self.{self.effect}")
+                        fonction("PAR")
+                    elif "Sol" in self.pkm_foe.l_type :
+                        print("Echouer, le pokemon est immunise")
+                    if self.nom == "Laser Glace" or self.nom == "Poing Glace" or self.nom == "Crocs Givre":
+                        fonction = eval(f"self.{self.effect}")
+                        fonction("GEL")
+                if self.effect == "SleepEffect" :
+                    if self.nom == "Poudre Dodo" and "Plante" not in self.pkm_foe.l_type :
+                        fonction = eval(f"self.{self.effect}")
+                        fonction(self.pkm_foe)
+                    elif "Plante" in self.pkm_foe.l_type :
+                        print("Echouer, le pokemon est immunise")
+                if self.effect == "PoisonedEffect" :
+                    if "Acier" not in self.pkm_foe.l_type :
+                        fonction = eval(f"self.{self.effect}")
+                        fonction(self.pkm_foe)
+                    elif "Acier" in self.pkm_foe.l_type :
+                        print("Echouer, le pokemon est immunise")
+                if self.effect == "HealAfterFightEffect" :
+                            print(f"{self.my_pkm.nom} se heal")
+                            self.HealAfterFightEffect(self.my_pkm, dgt)
+                            print(f"{self.my_pkm.nom} recupert {int(dgt)} : hp {self.my_pkm.hp}")
+                elif self.effect == "HealEffect" :
+                    print(f"{self.my_pkm.nom} se heal")
+                    self.HealEffect(self.my_pkm)
+                    print(f"{self.my_pkm.nom} recupert --->: hp {self.my_pkm.hp}")
+                elif self.effect == "AtterissageEffect" :
+                    print(f"{self.my_pkm.nom} se heal")
+                    self.AtterissageEffect(self.my_pkm)
+                    print(f"{self.my_pkm.nom} recupert --->: hp {self.my_pkm.hp}")
+                if self.effect == "MutilerEffect" :
+                    self.MutilerEffect(self.my_pkm)
+                    print("Le contre-coup de l'attque la blesse")
+                if self.effect == "BoostDef" :
+                    self.BoostDef(self.my_pkm)
+                    print("Boost de def Active")
+                if self.effect == "BoostAtkSpe" :
+                    print("Boost de Atk Spe Active")
+                    self.BoostAtkSpe(self.my_pkm)
+                if self.effect == "ChanceBoostDef" :
+                    self.ChanceBoostDef(self.my_pkm)
+                    print("Chance active")
+                if self.effect == "ChanceDiminuerDef" :
+                    self.ChanceDiminuerDef(self.pkm_foe)
+                if self.effect == "ChanceDiminuerDefSpe" :
+                    self.ChanceDiminuerDefSpe(self.pkm_foe)
+                if self.effect == "ChanceDiminuerAtkSpe" :
+                    self.ChanceDiminuerAtkSpe(self.pkm_foe)
+                if self.effect == "ChanceDiminuerAtk" :
+                    self.ChanceDiminuerAtk(self.pkm_foe)
+                if self.effect == "BaisseLaDef_spe" :
+                    if self.nom != "Close Combat" :
+                        self.BaisseLaDef_spe(self.pkm_foe)
                     else :
-                        print(self.nom)
-                        self.effect("SLP")
-            
-    def Affiche(self) :
-        print(self.nom)
+                        self.BaisseLaDef_spe(self.my_pkm)
+                        
+                if self.effect == "BaisseLaDef" :
+                    if self.nom != "Marteau Mastoc" or self.nom != "Close Combat" or self.nom != "Surpuissance" :
+                        self.BaisseLaDef(self.pkm_foe)
+                    else :
+                        self.BaisseLaDef(self.my_pkm)
+                if self.effect == "BaisseAtk" :
+                    if self.nom != "Marteau Mastoc" or self.nom != "Surpuissance" :
+                        self.BaisseAtk(self.pkm_foe)
+                    else :
+                        self.BaisseAtk(self.my_pkm)
+                if self.effect == "BaisseAtkSpe" :
+                    if self.nom != "Draco-Météore" :
+                        self.BaisseAtkSpe(self.pkm_foe)
+                    else :
+                        self.BaisseAtkSpe(self.my_pkm)
+                if self.effect == "Peur" :
+                    self.Peur(self.pkm_foe)
+                if self.effect == "Bluff" and "Spectre" not in self.pkm_foe.l_type :
+                    self.Bluff(self.pkm_foe)
+                if self.effect == "PauseEffect" :
+                    self.PauseEffect(self.my_pkm)
+                if self.effect == "Invincible" :
+                    self.Invincible(self.my_pkm)
+                if self.effect == "Colere" :
+                    self.Colere(self.my_pkm)
+                if self.effect == "Abri" :
+                    self.Abri(self.my_pkm)
+                
+                
+    def InfligerDgtFindeTour(self) :
+        if self.my_pkm.statut != "" :
+                if self.my_pkm.statut == "BRU" :
+                    if self.my_pkm.hp != 0 :
+                        self.my_pkm.hp -= int((self.my_pkm.hp*7)/100)
+                        print(f"Inflige Brulure... HP restant : {self.my_pkm.hp}")
+                self.my_pkm.count_brulure += 1 
+                if self.my_pkm.statut == "PSN" and self.my_pkm.count_poison > 0 :
+                    self.PoisonedEffect(self.my_pkm)
+                    print(f"Inflige Poison sur {self.my_pkm.nom} ... HP restant {self.my_pkm.hp}:")      
+                self.my_pkm.count_poison += 1  
+    #def Affiche(self) :
+      #  print("Pour verifier :", self.nom)
 
 
 class Combat():
@@ -668,14 +883,6 @@ class Combat():
         self.turn_me = True
         self.turn_bot = False
     
-    def MyTurn(self) :
-        self.turn_me = True
-        self.turn_bot = False
-        
-    def BotTurn(self) :
-        self.turn_me = False
-        self.turn_bot = True
-    
     # J'ouvre mon Fichier Json ou il y a les infos pour chaque attaques et je les renvois a la fonction qui prepare le combat
     def RecupererInfos(self, name):
         with open("infos_atk.json", "r") as ia :
@@ -683,7 +890,7 @@ class Combat():
         for attaques in file :
             for k,v in attaques.items() :
                 if name == k :
-                    pu = v[0]
+                    pu = int(v[0])
                     precision = v[1]
                     prio = v[2]
                     t = v[3]
@@ -692,23 +899,30 @@ class Combat():
         
         return pu, precision, prio, t, cat, eff
     
-    def ChoisirAttaque(self, l_atk) :
-        # Pour un test je demande une atk aléatoire mais ici on fera en sorte de recuperer le nom de l'atk selectionnée
-        myatk = random.choice(l_atk)
-        puissance, precision, prio, type_, categorie, effect = self.RecupererInfos(myatk)
-        # J'instancie l'attaque en fonction de celle recuperer
-        attaque = Attaque(myatk, puissance, precision, type_, categorie, prio, effect)
-        return attaque
     
     def AttaqueJoueur(self) :
-        attaque = self.ChoisirAttaque(self.l_atk1)
-        # J'appelle la fonction qui calcul les degats
+        myatk = random.choice(self.l_atk1)
+        myatk = "Abri"
+        if self.pkm1.etat_ephemere == "DISPARU" :
+            myatk = "Tunnel"
+        elif self.pkm1.etat_ephemere == "ANGRY" :
+            myatk = "Colère"
+        puissance, precision, prio, type_, categorie, effect = self.RecupererInfos(myatk)
+        # J'instancie l'attaque en fonction de celle recuperer
+        attaque = Attaque(myatk, puissance, precision, type_, categorie, prio, effect, pokemon1, pokemon2)
         return attaque
         
     
     
-    def AttaqueBot(self) :    
-        attaque2 = self.ChoisirAttaque(self.l_atk2)
+    def AttaqueBot(self) :  
+        myatk2 = random.choice(self.l_atk2)
+        if self.pkm2.etat_ephemere == "DISPARU" :
+            myatk2 = "Tunnel"
+        elif self.pkm2.etat_ephemere == "ANGRY" :
+            myatk2 = "Colère"
+        puissance, precision, prio, type_, categorie, effect = self.RecupererInfos(myatk2)
+        # J'instancie l'attaque en fonction de celle recuperer
+        attaque2 = Attaque(myatk2, puissance, precision, type_, categorie, prio, effect, pokemon2, pokemon1)  
         return attaque2
         
 
@@ -716,20 +930,46 @@ class Combat():
     def DeroulementCombat(self) :
         attaque_player = self.AttaqueJoueur()
         attaque_bot = self.AttaqueBot()
-        if attaque_player.priorite > attaque_bot.priorite :
-            attaque_player.CalculDegat(pokemon1,pokemon2)
-            attaque_bot.CalculDegat(pokemon2,pokemon1)
+        if attaque_player.nom == "Abri" and attaque_bot.categorie != "Statut":
+            attaque_player.priorite = 5
+        elif attaque_bot.nom == "Abri" and attaque_player.categorie != "Statut":
+            attaque_bot.priorite = 5
+        elif attaque_player.nom == "Abri" and attaque_bot.categorie == "Statut" :
+            attaque_player.precision = 0
+            attaque_player.priorite = 5
+        elif attaque_bot.nom == "Abri" and attaque_player.categorie == "Statut":
+            attaque_bot.precision = 0
+            attaque_bot.priorite = 5
+        print(attaque_player.nom, attaque_player.priorite, attaque_player.precision)
+        if attaque_player.nom == "Bluff" and pokemon1.counting_bluff == 0 and attaque_bot.nom == "Bluff" and pokemon2.counting_bluff == 0 : 
+            if self.pkm1.vit >= self.pkm2.vit :
+                attaque_player.CalculDegat()
+                attaque_bot.CalculDegat()
+            else :
+                attaque_bot.CalculDegat()
+                attaque_player.CalculDegat()
+        elif attaque_player.nom == "Bluff" and pokemon1.counting_bluff == 0 :
+            attaque_player.CalculDegat()
+            attaque_bot.CalculDegat()
+        elif attaque_bot.nom == "Bluff" and pokemon2.counting_bluff == 0 :
+            attaque_bot.CalculDegat()
+            attaque_player.CalculDegat()
+        elif attaque_player.priorite > attaque_bot.priorite :
+            attaque_player.CalculDegat()
+            attaque_bot.CalculDegat()
         elif attaque_bot.priorite > attaque_player.priorite : 
-            attaque_bot.CalculDegat(pokemon2,pokemon1)
-            attaque_player.CalculDegat(pokemon1,pokemon2)
+            attaque_bot.CalculDegat()
+            attaque_player.CalculDegat()
         elif attaque_bot.priorite == attaque_player.priorite :
             if self.pkm1.vit >= self.pkm2.vit :
-                attaque_player.CalculDegat(pokemon1,pokemon2)
-                attaque_bot.CalculDegat(pokemon2,pokemon1)
+                attaque_player.CalculDegat()
+                attaque_bot.CalculDegat()
             else :
-                attaque_bot.CalculDegat(pokemon2,pokemon1)
-                attaque_player.CalculDegat(pokemon1,pokemon2)
+                attaque_bot.CalculDegat()
+                attaque_player.CalculDegat()
         
+        attaque_bot.InfligerDgtFindeTour()
+        attaque_player.InfligerDgtFindeTour()
     
             
             
@@ -738,17 +978,22 @@ class Combat():
         
 
 # (nom, sexe, niv)       
-pokemon1 = Pokemon("Suicune","male",50)
+pokemon1 = Pokemon("Jungko","male",50)
 pokemon2 = Pokemon("Florizarre","femelle",50)
 pokemon1.Stat()
 pokemon2.Stat()
-#pokemon1.AfficherStats()
-#pokemon2.AfficherStats()
+pokemon1.AfficherStats()
+pokemon2.AfficherStats()
 
 
 combat = Combat(pokemon1, pokemon2, pokemon1.liste_atk, pokemon2.liste_atk)
+print("\nTOUR 1")
 combat.DeroulementCombat()
+print("\nTOUR 2")
 combat.DeroulementCombat()
+print("\nTOUR 3")
+combat.DeroulementCombat()
+print("\nTOUR 4")
 combat.DeroulementCombat()
 
 
