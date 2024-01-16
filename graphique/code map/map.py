@@ -15,7 +15,7 @@ class Map:
         self.switch_map('map0')
 
     def switch_map(self, map: str):
-        self.tmx_data = pytmx.load_pygame(f'C:/Users/Elfo98/OneDrive/Documenti/GitHub/Pokemon/graphique/{map}.tmx')
+        self.tmx_data = pytmx.load_pygame(f'Pokemon/graphique/{map}.tmx')
         map_data = pyscroll.data.TiledMapData(self.tmx_data)
         self.map_layer = pyscroll.BufferedRenderer(map_data, self.screen.get_size()) #affichage map
         self.map_layer.zoom = 2 # zoom map
