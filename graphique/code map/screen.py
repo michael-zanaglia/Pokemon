@@ -5,7 +5,7 @@ class Screen:
         self.display = pygame.display.set_mode((800,800))
         pygame.display.set_caption('Pokémon')
         self.clock = pygame.time.Clock()
-        self.framerate = 30
+        self.framerate = 240
 
     def update(self):
         pygame.display.flip()

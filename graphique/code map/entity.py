@@ -13,12 +13,12 @@
 #         # self.direction: str = "down"
 #         self.all_images = self.get_all_images()
 #         # self.animation_index = 0
-    
+
 #     def update(self):
 #         self.check_move()
 #         self.rect.topleft = self.position
 #         # self.update_animation()
-    
+
 #     def check_move(self):
 #         if self.keylistener.key_pressed(pygame.K_a):
 #             self.start_press_time = pygame.time.get_ticks()
@@ -49,7 +49,7 @@
 #             self.press_duration = 0
 
 #         # Cambia animazione in orizzontale dopo 1 secondi di pressione
-    
+
 #     def change_horizontal_animation(self, plus):
 #         # Cambia l'animazione in orizzontale qui
 #         # Ad esempio, cambia l'immagine o l'indice dell'animazione
@@ -100,9 +100,12 @@
 #             for j, key in enumerate(all_images.keys()):
 #                 all_images[key].append(Tool.split_image(self.sprite, i*24, j*32, 24, 32))
 #         return all_images
-    
+
 
 import pygame
+from pygame.locals import *
+import sys
+import time
 from keylistener import KeyListener
 from tool import Tool
 
@@ -115,64 +118,58 @@ class Entity(pygame.sprite.Sprite):
         self.position = [0, 0]
         self.rect: pygame.Rect = pygame.Rect(0, 0, 24, 32)
         self.all_images = self.get_all_images()
-        self.start_press_time = 0
-        self.press_duration = 0
+        self.animation_index = 0
+        self.animation_delay = 200  # 1000 milliseconds (1 second)
+        self.last_animation_time = 0
+        self.image = self.all_images['left'][self.animation_index]
 
     def update(self):
         self.check_move()
         self.rect.topleft = self.position
+        self.update_move()
 
     def check_move(self):
-        self.press_duration = pygame.time.get_ticks() - self.start_press_time
-
         if self.keylistener.key_pressed(pygame.K_a):
-            self.start_press_time = pygame.time.get_ticks()
-            self.move_left()
+            self.move("left")
         elif self.keylistener.key_pressed(pygame.K_d):
-            self.start_press_time = pygame.time.get_ticks()
-            self.move_right()
+            self.move("right")
         elif self.keylistener.key_pressed(pygame.K_w):
-            self.start_press_time = pygame.time.get_ticks()
-            self.move_up()
+            self.move("up")
         elif self.keylistener.key_pressed(pygame.K_s):
-            self.start_press_time = pygame.time.get_ticks()
-            self.move_down()
-        else:
-            self.start_press_time = 0
+            self.move("down")
+                
 
-        # Cambia animazione in orizzontale dopo 1 secondo di pressione
-        if self.press_duration >= 1000:
-            self.change_horizontal_animation()
+    def update_move(self, ):
+        current_time = pygame.time.get_ticks()
+        if (current_time - self.last_animation_time) >= self.animation_delay:
+            if self.keylistener.key_pressed(pygame.K_a):
+                self.animation_index = (self.animation_index + 1) % len(self.all_images["left"])
+                self.image = self.all_images["left"][self.animation_index]
+                self.last_animation_time = current_time
+            if self.keylistener.key_pressed(pygame.K_d):
+                self.animation_index = (self.animation_index + 1) % len(self.all_images["right"])
+                self.image = self.all_images["right"][self.animation_index]
+                self.last_animation_time = current_time
+            if self.keylistener.key_pressed(pygame.K_w):
+                self.animation_index = (self.animation_index + 1) % len(self.all_images["up"])
+                self.image = self.all_images["up"][self.animation_index]
+                self.last_animation_time = current_time
+            if self.keylistener.key_pressed(pygame.K_s):
+                self.animation_index = (self.animation_index + 1) % len(self.all_images["down"])
+                self.image = self.all_images["down"][self.animation_index]
+                self.last_animation_time = current_time
 
-    def change_horizontal_animation(self):
-        direction = None
 
-        if self.keylistener.key_pressed(pygame.K_a):
-            direction = "left"
-        elif self.keylistener.key_pressed(pygame.K_d):
-            direction = "right"
         
-        if direction:
-            self.image_res(direction)
-
-    def image_res(self, direct):
-        self.image = self.all_images[direct][0]
-
-    def move_left(self):
-        self.position[0] -= 1
-        self.image = self.all_images['left'][0]
-
-    def move_right(self):
-        self.position[0] += 1
-        self.image = self.all_images['right'][0]
-
-    def move_up(self):
-        self.position[1] -= 1
-        self.image = self.all_images['up'][1]
-
-    def move_down(self):
-        self.position[1] += 1
-        self.image = self.all_images['down'][1]
+    def move(self, direction):
+        if direction == 'left':
+            self.position[0] -= 1
+        elif direction == 'right':
+            self.position[0] += 1
+        elif direction == 'up':
+            self.position[1] -= 1
+        elif direction == 'down':
+            self.position[1] += 1
 
     def get_all_images(self):
         all_images = {
