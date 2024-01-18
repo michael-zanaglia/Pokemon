@@ -70,7 +70,7 @@
         ]
     },
     {
-        "Atterissage": [
+        "Atterrissage": [
             0,
             100,
             0,
@@ -124,19 +124,9 @@
             120,
             100,
             0,
-            "Electacle",
+            "Electrik",
             "Sp\u00e9ciale",
             ["GetStatutChance","MutilerEffect"]
-        ]
-    },
-    {
-        "Mur Lumi\u00e8re": [
-            0,
-            100,
-            0,
-            "Psy",
-            "Statut",
-            "BoostDefSpeTeam"
         ]
     },
     {
@@ -210,14 +200,6 @@
         ]
     },
     {
-        "Requiem": [
-            0,
-            0,
-            0,
-            "Normal",
-            "Statut",
-            "Requiem"
-        ],
         "Draco_Queue": [
             60,
             90,

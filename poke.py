@@ -1,8 +1,9 @@
 import json
 import random
+import pygame
 
 class Pokemon():
-    def __init__(self, nom, sexe, niv, num_pokedex="", nature = "", type = "") :
+    def __init__(self, nom, sexe, niv = 50, num_pokedex = "", nature = "", type = "") :
         self.nom = nom
         if num_pokedex == "" :
             self.num_pokedex = self.NumPokedex()
@@ -42,18 +43,34 @@ class Pokemon():
                         "Naïf",
                         "Malpoli"
                         ]
-        if nature == "" :
-            self.nature = self.Nature()
-        self.hp, self.atk, self.defense, self.atk_spe, self.def_spe, self.vit = self.GetPkmStat()
+        # Si le pokemon a deja été utilisé il verifie et si c'est le cas je recupère les valeurs avant qu'il soit echangé.
+        
+        if self.nom in team.used :
+            self.nature = nature
+            self.hp, self.atk, self.defense, self.atk_spe, self.def_spe, self.vit = 0, 0, 0, 0, 0, 0
+            self.statut, self.alteration, self.count_brulure, self.count_poison = 0, 0, 0, 0
+            self.nom, self.nature, self.hp, self.atk, self.defense, self.atk_spe, self.def_spe, self.vit, self.statut, self.alteration, self.count_brulure, self.count_poison = combat.Returned(self.nom, self.nature, self.hp, self.atk, self.defense, self.atk_spe, self.def_spe, self.vit, self.statut, self.alteration, self.count_brulure, self.count_poison)
+        elif self.nom in team2.used :
+            self.nature = nature
+            self.hp, self.atk, self.defense, self.atk_spe, self.def_spe, self.vit = 0, 0, 0, 0, 0, 0
+            self.statut, self.alteration, self.count_brulure, self.count_poison = 0, 0, 0, 0
+            self.nom, self.nature, self.hp, self.atk, self.defense, self.atk_spe, self.def_spe, self.vit, self.statut, self.alteration, self.count_brulure, self.count_poison = combat.Returned(self.nom, self.nature, self.hp, self.atk, self.defense, self.atk_spe, self.def_spe, self.vit, self.statut, self.alteration, self.count_brulure, self.count_poison)
+        else :
+            # Si ce n'est pas le cas j'instancie la classe avec les attributs importantes
+            if nature == "" :
+                self.nature = self.Nature()
+            self.hp, self.atk, self.defense, self.atk_spe, self.def_spe, self.vit = self.GetPkmStat()
+            self.statut = ""
+            self.alteration = False
+            self.count_brulure = 0
+            self.count_poison = 0
+            
         self.liste_atk = self.ListeAttaques()
         self.weak, self.res, self.immune = self.OpenJson()
         self.pkm_faiblesse, self.pkm_double, self.pkm_resistance, self.pkm_double_res, self.pkm_immune = self.FoundWeakness()
-        self.statut = ""
         self.etat_ephemere = ""
-        self.alteration = False
-        self.count_poison = 0
-        self.count_brulure = 0
         self.counting_bluff = 0
+        self.combat = False
     
     def NumPokedex(self) :
         #j'ouvre un fichier JSON. si je trouve le nom du pokemon il me retourne son numero associe.
@@ -321,7 +338,7 @@ class Pokemon():
     
     
 class Attaque():
-    def __init__(self, nom, puissance, precision, type, categorie, priorite, effect, pkm1, pkm2):
+    def __init__(self, nom, puissance, precision, type, categorie, priorite, effect, pkm1, pkm2, turn):
         self.nom = nom
         self.type = type
         self.puissance = puissance
@@ -333,6 +350,8 @@ class Attaque():
         self.pkm_foe = pkm2
         self.stock = 0 
         self.count_para = 0
+        self.turn = turn
+        self.fail = False
         
         
 ########################################### EFFETS GLOBALS ###########################################
@@ -345,17 +364,17 @@ class Attaque():
         choice = random.choice(liste)
         if self.pkm_foe.alteration == False or self.pkm_foe.alteration != "PSN" or self.pkm_foe.alteration != "BRU" :
             if choice < 10 :
-                if status == "GEL" :
+                if status == "GEL" and status != "SLP" :
                     print(f"{self.pkm_foe.nom} est gelé.")
                     self.GelEffect(self.pkm_foe)
             elif choice <= 20 :
-                if status == "PSN" :
+                if status == "PSN" and status != "SLP" :
                     print(f"{self.pkm_foe.nom} est empoisonné.")
                     self.PoisonedEffect(self.pkm_foe)
-                elif status == "BRU" :
+                elif status == "BRU" and status != "SLP" :
                     print(f"{self.pkm_foe.nom} est brulé.")
                     self.BruleEffect(self.pkm_foe)
-                elif status == "PAR" :
+                elif status == "PAR" and status != "SLP" :
                     print(f"{self.pkm_foe.nom} est paralysé.")
                     self.ParalysedEffect(self.pkm_foe)
             else :
@@ -366,23 +385,24 @@ class Attaque():
     def PoisonedEffect(self, cible) :
         # Chaque fin de tour code partiellement fait
         if cible.hp != 0 :
-            cible.alteration = "PSN"
+            #cible.alteration = "PSN"
             if cible.count_poison == 0 :
                 cible.hp -= int((cible.hp*10)/100)
-                print(f" Count a 0, Inflige Poison sur {cible.nom} ... HP restant {cible.hp}:")
                 cible.statut = "PSN"
             elif cible.count_poison == 1 :
                 cible.hp -= int((cible.hp*12)/100)
             elif cible.count_poison >= 2 :
+                dgt = int((cible.hp*16)/100)
+                if dgt <  1 :
+                    dgt = 1
                 cible.hp -= int((cible.hp*16)/100)
+                
                 
     def BruleEffect(self, cible) :
         # Chaque fin de tour code partiellement fait
         self.stock = cible.atk
-        #print(f"Brule eff {cible.atk}")
         if cible.hp != 0 :
-                cible.atk -= int((cible.atk*20)/100)
-                #print(f"Brule eff juste apres {cible.atk}")
+            cible.atk -= int((cible.atk*20)/100)       
         cible.statut = "BRU"
     
     def ParalysedEffect(self, cible) :
@@ -397,12 +417,12 @@ class Attaque():
             choice_play = random.choice(liste_play)
             if choice_play <= 3 :
                 # Message pour dire que le pokemon n'a pas pu attaquer
-                print(f"{cible.nom} Paralysed")
+                print(f"{cible.nom} est paralysé. Il n'a pas pu attaquer.")
                 cible.alteration = True
                 cible.statut = "PAR"
             choice_time = random.choice(liste_time)
             if choice_time >= 5 :
-                print(f"{cible.nom} plus Paralysed")
+                print(f"{cible.nom} n'est plus paralysé.")
                 paralyzed = not paralyzed
                 cible.vit = self.stock
                 cible.alteration = False
@@ -413,15 +433,16 @@ class Attaque():
         spleeping = True
         if spleeping :
             choice_play = random.choice(liste_play)
-            if choice_play <= 9 :
+            if choice_play < 9 :
                     print(f"{cible.nom} est endromie")
                     cible.alteration = True
                     cible.statut = "SLP"
             else :
-                print(f"{cible.nom} est endromie")
+                print(f"{cible.nom} n'est plus endromie")
                 spleeping = not spleeping
                 cible.alteration = False
                 cible.statut = ""
+                
     def GelEffect(self, cible) :
             liste_play = [1,2,3]
             liste_time = [1,2,3,4,5,6]
@@ -429,12 +450,12 @@ class Attaque():
             if gel :
                 choice_play = random.choice(liste_play)
                 if choice_play in liste_play :
-                    print(f"{cible.nom} Geler")
+                    print(f"{cible.nom} est gelé.")
                     cible.alteration = True
                     cible.statut = "GEL"
             choice_time = random.choice(liste_time)
             if choice_time == 6 :
-                print(f"{cible.nom} plus Geler")
+                print(f"{cible.nom} n'est plus gelé.")
                 gel = not gel
                 cible.alteration = False
                 cible.statut = ""
@@ -475,30 +496,21 @@ class Attaque():
                         cible.hp += int(int(v[0])*50) / 100
                         if cible.hp > int(v[0]) :
                             cible.hp = int(v[0])
-    
-#/!\ Verifier si le pokemon ne s'enleve pas plus de 0 sinon affiche 0    
+       
     def MutilerEffect(self, cible) :
-        cible.hp -= int(cible.hp*35) / 100
-        if cible.hp < 0 :
+        coup = int(cible.hp*35) / 100
+        if coup < 1 :
+            coup = 1
+        cible.hp -= coup 
+        if cible.hp < 1 :
             cible.hp = 0
-        
-    def BoostDefSpeTeam(self) : ############################### Apres avoir creer l'equipe
-        count = 0
-        while count != 5 :
-            # Pour chaque Pokemon de l'equipe x2 DefSpe pendant 5 tours
-            count += 1
-        # Retourne aux stats de base
-        with open("statistic.json", "r") as stat :
-            file = json.load(stat)
-        for pokemons in file :
-            for k,v in pokemons.items() :
-                if Pokemon.nom == k :
-                    Pokemon.def_spe = v[4]
                     
     def BoostDef(self, cible) :
+        print(f"La défense de {cible.nom} augmente.")
         cible.defense = int(cible.defense*1.5)
         
     def BoostAtkSpe(self, cible) :
+        print(f"L'attaque spéciale de la {cible.nom} augmente.")
         cible.atk_spe = int(cible.atk_spe*1.5)
     
     def ChanceBoostDef(self, cible) :
@@ -507,7 +519,7 @@ class Attaque():
             liste.append(x)
         choice = random.choice(liste)
         if choice <= 35 :
-            print("La def augmente")
+            print(f"La defense de {cible.nom} augmente")
             cible.defense += int(cible.defense/2)
     
     def Peur(self, cible) :
@@ -518,29 +530,26 @@ class Attaque():
             if choose == 5 :
                 cible.etat_ephemere = "PEUR"
                 
-    
     def Bluff(self, cible) :
-        #Si c'est ta premiere attaque elle est prioritaire et apeure l'ennemie. Marche qu'une fois
+        # Si c'est la premiere attaque elle est prioritaire et apeure l'ennemie. Marche qu'une fois.
         if self.my_pkm.counting_bluff == 0 :
             self.Peur(cible)
             self.my_pkm.counting_bluff = 1      
         
-
-                
-    
     def PauseEffect(self,cible) :
         cible.etat_ephemere = "PAUSE"
-        #Si attaquer, prochain tour pause 
-        
     
     def ChanceDiminuerDef(self, cible) :
         liste = []
         for x in range(1,101) :
             liste.append(x)
         choice = random.choice(liste)
-        if choice <= 20 :
+        if cible.defense < 1 :
+            print(f"La défense de {cible.nom} est déja très basse.")
+        elif choice <= 20 :
+            print(f"La défense de {cible.nom} baisse.")
             cible.defense -= int((cible.defense*25)/100)
-            if cible.defense < 0 :
+            if cible.defense < 1 :
                 cible.defense = 0
             
     def ChanceDiminuerDefSpe(self, cible) :
@@ -548,9 +557,12 @@ class Attaque():
         for x in range(0,101) :
             liste.append(x)
         choice = random.choice(liste)
-        if choice <= 20 :
+        if cible.def_spe < 1 :
+            print(f"La défense spéciale de {cible.nom} est déja très basse.")
+        elif choice <= 20 :
+            print(f"La défense spéciale de {cible.nom} baisse.")
             cible.def_spe -= int((cible.def_spe*25)/100)
-            if cible.def_spe < 0 :
+            if cible.def_spe < 1 :
                 cible.def_spe = 0
             
     def ChanceDiminuerAtkSpe(self, cible) :
@@ -558,9 +570,12 @@ class Attaque():
         for x in range(0,101) :
             liste.append(x)
         choice = random.choice(liste)
-        if choice <= 20 :
+        if cible.atk_spe < 1 :
+            print(f"L'attaque spéciale de {cible.nom} est déja très basse.")
+        elif choice <= 20 :
+            print(f"L'attaque spéciale de {cible.nom} baisse.")
             cible.atk_spe -= int((cible.atk_spe*25)/100)
-            if cible.atk_spe < 0 :
+            if cible.atk_spe < 1 :
                 cible.atk_spe = 0
             
     def ChanceDiminuerAtk(self, cible) :
@@ -568,49 +583,122 @@ class Attaque():
         for x in range(0,101) :
             liste.append(x)
         choice = random.choice(liste)
-        if choice <= 20 :
+        if cible.atk < 1 :
+            print(f"L'attaque spéciale de {cible.nom} est déja très basse.")
+        elif choice <= 20 :
+            print(f"L'attaque spéciale de {cible.nom} baisse.")
             cible.atk -= int((cible.atk*25)/100)
-            if cible.atk < 0 :
+            if cible.atk < 1 :
                 cible.atk = 0
     
     def BaisseLaDef_spe(self, cible) :
+        print(f"La défense spéciale de {cible.nom} baisse.")
         cible.def_spe -= int((cible.def_spe*30)/100)
-        if cible.def_spe < 0 :
+        if cible.def_spe < 1 :
             cible.def_spe = 0
     
     def BaisseLaDef(self, cible) :
+        print(f"La défense de {cible.nom} baisse.")
         cible.defense -= int((cible.defense*30)/100)
-        if cible.defense < 0 :
+        if cible.defense < 1 :
             cible.defense = 0
         
     def BaisseAtk(self, cible) :
+        print(f"L'attaque de {cible.nom} baisse.")
         cible.atk -= int((cible.atk*30)/100)
-        if cible.atk < 0 :
+        if cible.atk < 1 :
             cible.atk = 0
     
     def BaisseAtkSpe(self, cible) :
+        print(f"L'attaque spéciale de {cible.nom} baisse.")
         cible.atk_spe -= int((cible.atk_spe*30)/100)
-        if cible.atk_spe < 0 :
+        if cible.atk_spe < 1 :
             cible.atk_spe = 0
-    
-    def Requiem(self) :
-        count = 0
-        if count == 3 :
-            # if pokemon 1 est toujours le meme :
-                # hp du pokemon en combat meurt
-            # if pokemon 2 est toujours le meme :
-                # hp du pokemon en combat meurt
-            pass
-        count += 1
         
     def Abri(self, cible):
         if cible.etat_ephemere == "" :
-            print(cible.nom,"se protege")
+            print(cible.nom,"se protege.")
             cible.etat_ephemere = "ABRI"
         
-    def ChangePkm(self) :
-        # Fonction qui permettera d'envoye un pokemon dont le type et plus fort ou neutre face a nous
-        pass
+    def ChangePkm(self, turn) :
+        if turn == "player" :
+            if pokemon1.nom in team.used :
+                team.used.remove(pokemon1.nom)
+            team.used.append(pokemon1.nom)
+            while True :
+                while True :
+                    for x in team.l_pok :
+                        print(team.l_pok.index(x)+1, x)
+                    next_ = int(input("Qui choisissez vous ?"))
+                    pokemon_switched = team.l_pok[next_-1]
+                    if pokemon_switched != team.used[-1] and pokemon_switched not in team.liste_ko :
+                        self.my_pkm = Pokemon(f'{pokemon_switched}', 'male')
+                        break
+                    else :
+                        print("Envoi Impossible")
+                
+                if self.my_pkm.nom not in team.used :
+                    self.my_pkm.Stat()
+                if self.my_pkm.nom not in team.liste_ko :
+                    with open("played.json", "r") as played :
+                        try :
+                            data = json.load(played)
+                        except :
+                            data = []
+                    typo = {pokemon1.nom : [pokemon1.nature, pokemon1.hp, pokemon1.atk, pokemon1.defense, pokemon1.atk_spe, pokemon1.def_spe, pokemon1.vit, pokemon1.statut, pokemon1.alteration, pokemon1.count_brulure, pokemon1.count_poison]}
+                    for x in data :
+                        if typo.keys() == x.keys() :
+                                data.remove(x)
+                    data.append(typo)
+                    with open("played.json", "w") as played :
+                        json.dump(data, played, indent=4)
+                    print(f"{pokemon_switched} est envoye au combat")
+                    self.my_pkm.combat = True
+                    team.EnCombat(self.my_pkm.nom)
+                    return self.my_pkm
+                
+        else :
+            # Gestion du changement de pokemon pour l'ordinateur
+            if pokemon2.nom in team2.used :
+                # Si le pokemon a par hasard été changé par l'ordinateur plusieurs fois, pour eviter un redondance dans la liste je supprime le nom. 
+                team2.used.remove(pokemon2.nom)
+            # Et ou sinon je l'ajoute.
+            team2.used.append(pokemon2.nom)
+            while True :
+                # J'utilise for pour chercher un pokemon qi n'est non seulement pas K.O mais qu'il ne soit pas non plus le dernier avec lequel j'ai fait l'échange.
+                for _ in range(0,11):
+                    next_ = random.choice(team2.l_pok)
+                    if next_ != team2.used[-1] and next not in team2.ko_bot:
+                        break
+                    elif team2.used == []:
+                        break
+                index = team2.l_pok.index(next_)
+                # La typologie sous forme de dictionnaire avec les stats actuel du pokemon qui est retire du combat.
+                typo = {pokemon2.nom : [pokemon2.nature, pokemon2.hp, pokemon2.atk, pokemon2.defense, pokemon2.atk_spe, pokemon2.def_spe, pokemon2.vit, pokemon2.statut, pokemon2.alteration, pokemon2.count_brulure, pokemon2.count_poison]}
+                # J'instancie ma nouvelle classe
+                self.my_pkm = Pokemon(f'{team2.l_pok[index]}', 'male') 
+                # Si le pokemon existe deja pas besoin de verifier ses stats.
+                if self.my_pkm.nom not in team2.used :
+                    self.my_pkm.Stat()
+                # S'il n'est pas dans la liste des K.O alors je mets typo dans mon fichier JSON et je supprime le precedent s'il y a redondance.
+                if self.my_pkm.nom not in team2.ko_bot :
+                    with open("played2.json", "r") as played2 :
+                        try :
+                            data = json.load(played2)
+                        except :
+                            data = []
+                    for x in data :
+                        if typo.keys() == x.keys() :
+                            data.remove(x)
+                    data.append(typo)
+                    with open("played2.json", "w") as played2 :
+                        json.dump(data, played2, indent=4)
+                    print(f"{self.my_pkm.nom} est envoye au combat")
+                    self.my_pkm.combat = True
+                    team2.EnCombat(self.my_pkm.nom)
+                    return self.my_pkm
+                else :
+                    continue
     
     def Colere(self, cible) :
         if cible.etat_ephemere == "" :
@@ -627,29 +715,23 @@ class Attaque():
         else :
             cible.etat_ephemere = ""
     
-    def CoupBas(self) :
-        #Si l'adversaire atq je frappe en premier mais si la priorite et == le pokemon avec la plus grand rapidite atq en premier
-        pass
+    def Voltige(self, voltige, cible) :
+        if not voltige :
+            self.MutilerEffect(cible)
     
-    def Represailles(self) :
-        # Si le pokemon frappe en deuxieme x2 la puissance de l'attaque
-        pass
-    
-    def Voltige(self) :
-        # Si attaque echoue :
-            self.MutilerEffect()
-            pass
-    
-    def DmgWithDefStat(self):
-        Pokemon.atk = Pokemon.defense
-        #Trouver un moyen de recuperer ensuite atk apres l'attaque
-        pass
+    def DmgWithDefStat(self, cible):
+        self.stock = cible.atk
+        cible.atk = cible.defense
+        
+
+
     
     def CalculDegat(self) :
         # Verifie la precision, si precision est true on passe a la verification suivante sinon renvoie atk echouer
         # Lorsque atk, verifie la categorie et en fonction effectue le calcule de dommage.
         # Lors du calcule de dommage verifie si taux crit si c'est le cas effectue le double des degats 
         # Et si le type de l'attaque et efficace ou non mettre a jour les degat
+        ## LA GESTION DE CALCUL DE DEGAT EST COMPLEXE. ELLE GERE BEAUCOUP DE CONDITION ET PARAMETRE
         test_precision = []
         echouer = False
         crit = []
@@ -661,14 +743,21 @@ class Attaque():
             critprint = False
             for x in range(1,101) :
                 test_precision.append(x)
-            for y in range(1,25) :
-                crit.append(y)
+            if self.nom != "Lame-Feuille" or self.nom != "Lame de Roc" :
+                for y in range(1,25) :
+                    crit.append(y)
+            else : 
+                for y in range(1,5) :
+                    crit.append(y) 
             choice_crit = random.choice(crit)
             choice_tp = random.choice(test_precision)
             if self.my_pkm.etat_ephemere == "" or self.my_pkm.etat_ephemere == "DISPARU" or self.my_pkm.etat_ephemere == "ANGRY" or self.my_pkm.etat_ephemere == "ABRI": 
                 if self.my_pkm.alteration == False or self.my_pkm.alteration == "PSN" or self.my_pkm.alteration == "BRU"  :
-                    print(f"{self.my_pkm.nom} utilise avec {self.nom}")
+                    print(f"{self.my_pkm.nom} utilise {self.nom} !")
                     if choice_tp <= self.precision and self.pkm_foe.etat_ephemere != "DISPARU" :
+                        voltige = True
+                        if self.nom == "Big Splash" :
+                            self.DmgWithDefStat(self.my_pkm)
                         if self.categorie == "Physique" :
                             dgt = self.my_pkm.niv*0.4+2*((self.puissance * self.my_pkm.atk) / (self.pkm_foe.defense * 50) + 2 )
                         elif self.categorie == "Spéciale" :
@@ -677,7 +766,10 @@ class Attaque():
                             dgt = 0
                         if self.pkm_foe.statut != "" and self.categorie == "Statut" :
                             print("Votre attaque a echouer...") 
+                            self.fail = True
                         elif self.categorie != "Statut" :
+                            if self.nom == "Magie Florale" :
+                                choice_crit = 1
                             if choice_crit == 1 :
                                 dgt *= 1.95
                                 critprint = True
@@ -696,44 +788,56 @@ class Attaque():
                             elif self.type in self.pkm_foe.pkm_immune :
                                 dgt *= 0
                                 print(f"{self.pkm_foe.nom} n'est pas affecté...")
+                                self.fail = True
                             else :
                                 dgt *= 1    
                             if critprint :
                                 print("Coup Critique !")
                                 critprint = False   
                         if self.pkm_foe.etat_ephemere == "ABRI" :  
-                            print(f"{self.pkm_foe.nom} est protege.")
+                            print(f"{self.pkm_foe.nom} est protegé.")
                             echouer = True
-                            self.pkm_foe.etat_ephemere == ""
+                            self.fail = True
+                            self.pkm_foe.etat_ephemere = ""
+                        #if self.my_pkm.etat_ephemere == "ABRI" :
+                            #self.my_pkm.etat_ephemere == ""
                         else : 
                             self.pkm_foe.hp -= int(dgt)
+                        
 
 
 
-                        if self.pkm_foe.hp < 0 :
+                        if self.pkm_foe.hp < 1 :
                             self.pkm_foe.hp = 0
                         if self.nom == "Tunnel" and self.my_pkm.etat_ephemere == "" :
                                 print("Le pokemon s'est cache sous la terre.")
                                 self.pkm_foe.hp += int(dgt)
                         elif self.nom == "Tunnel" and self.my_pkm.etat_ephemere == "DISPARU" :
-                            print(f"{self.my_pkm.nom} sort de terre et attaque {self.pkm_foe.nom} avec {self.nom} : {self.pkm_foe.hp} restant apres l'attaque.")
+                            print(f"{self.my_pkm.nom} sort de terre et attaque {self.pkm_foe.nom} avec {self.nom} : {int(self.pkm_foe.hp)} restant apres l'attaque.")
                         else :
-                            print(f"{self.my_pkm.nom} attaque {self.pkm_foe.nom} avec {self.nom} : {self.pkm_foe.hp} restant apres l'attaque.")
-
+                            print(f"{self.my_pkm.nom} attaque {self.pkm_foe.nom} avec {self.nom} : {int(self.pkm_foe.hp)} restant apres l'attaque.")
+                            if self.my_pkm.hp <= 0 :
+                                print(f"{self.pkm_foe.nom} a gagné. {self.my_pkm.nom} est KO !")
+                            elif self.pkm_foe.hp <= 0 :
+                                print(f"{self.my_pkm.nom} a gagné. {self.pkm_foe.nom} est KO !")
+                        self.VerifierEffect(dgt, echouer, voltige)
                         
-                        self.VerifierEffect(dgt, echouer)
                     else : 
+                        voltige = False
+                        if self.nom == "Pied Voltige" :
+                            self.Voltige(voltige, self.my_pkm)
                         print(f"{self.my_pkm.nom} : Votre attaque a echoué (precision)")   
-                        if self.my_pkm.etat_ephemere == "ABRI" :
-                            self.my_pkm.etat_ephemere = ""
+                        self.fail = True
                                   
                 else :
                 
                     print(f"{self.my_pkm.nom} : Votre attaque a echoué")  
+                    self.fail = True
                     print(f"{self.pkm_foe.hp} restant apres l'attaque.")
                 
             elif self.my_pkm.etat_ephemere == "PEUR" :
                 print(f"{self.my_pkm.nom} a eu peur. Il n'a pas pu attaquer.")
+                self.fail = True
                 self.my_pkm.etat_ephemere = ""
 
             elif self.my_pkm.etat_ephemere == "PAUSE" :
@@ -746,35 +850,132 @@ class Attaque():
             self.my_pkm.counting_bluff = 1
                                           
         if self.my_pkm.hp == 0 :
-            print(f"{self.pkm_foe.nom} a gagné. {self.my_pkm.nom} est KO !")
             self.my_pkm.statut = ""
             self.my_pkm.alteration = False
             self.my_pkm.count_poison = 0
             self.my_pkm.count_brulure = 0
         elif self.pkm_foe.hp == 0 :
-            print(f"{self.my_pkm.nom} a gagné. {self.pkm_foe.nom} est KO !")
             self.my_pkm.statut = ""
             self.pkm_foe.alteration = False
             self.pkm_foe.count_poison = 0
             self.pkm_foe.count_brulure = 0
         
+        if self.nom == "Big Splash" :
+            self.my_pkm.atk = self.stock
+            
+        
     
-    def VerifierEffect(self, dgt, echouer) :
-        if self.effect != "None" :
+    def VerifierEffect(self, dgt, echouer, voltige) :
+        if isinstance(self.effect, list):
+            if not echouer :
+                for effect in self.effect :
+                    if effect == "GetStatutChance" :
+                        if self.nom == "Bombe Beurk" or self.nom == "Direct Toxik" :
+                            fonction = eval(f"self.{self.effect}")
+                            fonction("PSN")
+                        elif self.nom in ["Lance-Flammes", "Déflagration", "Ebullition", "Poing Feu", "Crocs Feu", "Ballon Brulant"] :
+                            fonction = eval(f"self.{self.effect}")
+                            fonction("BRU")
+                        if self.nom in ["Tonnerre", "Electacle", "Poing Eclair", "Crocs Eclair"] and "Sol" not in self.pkm_foe.l_type :
+                            fonction = eval(f"self.{self.effect}")
+                            fonction("PAR")
+                        elif "Sol" in self.pkm_foe.l_type :
+                            print("Echouer, le pokemon est immunise")
+                        if self.nom in ["Laser Glace", "Poing Glace", "Crocs Givre"] :
+                            fonction = eval(f"self.{self.effect}")
+                            fonction("GEL")
+                    if effect == "SleepEffect" :
+                        if self.nom == "Poudre Dodo" and "Plante" not in self.pkm_foe.l_type :
+                            fonction = eval(f"self.{self.effect}")
+                            fonction(self.pkm_foe)
+                        elif "Plante" in self.pkm_foe.l_type :
+                            print("Echouer, le pokemon est immunise")
+                    if effect == "PoisonedEffect" :
+                        if "Acier" not in self.pkm_foe.l_type :
+                            fonction = eval(f"self.{self.effect}")
+                            fonction(self.pkm_foe)
+                        elif "Acier" in self.pkm_foe.l_type :
+                            print("Echouer, le pokemon est immunise")
+                    if effect == "HealAfterFightEffect" :
+                                print(f"{self.my_pkm.nom} se heal")
+                                self.HealAfterFightEffect(self.my_pkm, dgt)
+                                print(f"{self.my_pkm.nom} recupert {int(dgt)} : hp {self.my_pkm.hp}")
+                    elif effect == "HealEffect" :
+                        print(f"{self.my_pkm.nom} se heal")
+                        self.HealEffect(self.my_pkm)
+                        print(f"{self.my_pkm.nom} recupert --->: hp {self.my_pkm.hp}")
+                    elif effect == "AtterissageEffect" :
+                        print(f"{self.my_pkm.nom} se heal")
+                        self.AtterissageEffect(self.my_pkm)
+                        print(f"{self.my_pkm.nom} recupert --->: hp {self.my_pkm.hp}")
+                    if effect == "MutilerEffect" :
+                        self.MutilerEffect(self.my_pkm)
+                        print("Le contre-coup de l'attque la blesse")
+                    if effect == "BoostDef" :
+                        self.BoostDef(self.my_pkm)
+                    if effect == "BoostAtkSpe" :
+                        self.BoostAtkSpe(self.my_pkm)
+                    if effect == "ChanceBoostDef" :
+                        self.ChanceBoostDef(self.my_pkm)
+                    if effect == "ChanceDiminuerDef" :
+                        self.ChanceDiminuerDef(self.pkm_foe)
+                    if effect == "ChanceDiminuerDefSpe" :
+                        self.ChanceDiminuerDefSpe(self.pkm_foe)
+                    if effect == "ChanceDiminuerAtkSpe" :
+                        self.ChanceDiminuerAtkSpe(self.pkm_foe)
+                    if effect == "ChanceDiminuerAtk" :
+                        self.ChanceDiminuerAtk(self.pkm_foe)
+                    if effect == "BaisseLaDef_spe" :
+                        if self.nom != "Close Combat" :
+                            self.BaisseLaDef_spe(self.pkm_foe)
+                        else :
+                            self.BaisseLaDef_spe(self.my_pkm)
+                            
+                    if effect == "BaisseLaDef" :
+                        if self.nom not in ["Marteau Mastoc", "Close Combat", "Surpuissance"] :
+                            self.BaisseLaDef(self.pkm_foe)
+                        else :
+                            self.BaisseLaDef(self.my_pkm)
+                    if effect == "BaisseAtk" :
+                        if self.nom not in ["Marteau Mastoc", "Surpuissance"] :
+                            self.BaisseAtk(self.pkm_foe)
+                        else :
+                            self.BaisseAtk(self.my_pkm)
+                    if effect == "BaisseAtkSpe" :
+                        if self.nom != "Draco-Météore" :
+                            self.BaisseAtkSpe(self.pkm_foe)
+                        else :
+                            self.BaisseAtkSpe(self.my_pkm)
+                    if effect == "Peur" :
+                        self.Peur(self.pkm_foe)
+                    if effect == "Bluff" and "Spectre" not in self.pkm_foe.l_type :
+                        self.Bluff(self.pkm_foe)
+                    if effect == "PauseEffect" :
+                        self.PauseEffect(self.my_pkm)
+                    if effect == "Invincible" :
+                        self.Invincible(self.my_pkm)
+                    if effect == "Colere" :
+                        self.Colere(self.my_pkm)
+                    if effect == "Abri" :
+                        self.Abri(self.my_pkm)
+                    if effect == "Voltige" :
+                        self.Voltige(voltige, self.my_pkm)
+            
+        elif self.effect != "None" :
             if not echouer : 
                 if self.effect == "GetStatutChance" :
                     if self.nom == "Bombe Beurk" or self.nom == "Direct Toxik" :
                         fonction = eval(f"self.{self.effect}")
                         fonction("PSN")
-                    elif self.nom == "Lance-Flammes" or self.nom == "Déflagration" or self.nom == "Ebullition" or self.nom == "Poing Feu" or self.nom == "Crocs Feu" or self.nom == "Ballon Brulant":
+                    elif self.nom in ["Lance-Flammes", "Déflagration", "Ebullition", "Poing Feu", "Crocs Feu", "Ballon Brulant"] :
                         fonction = eval(f"self.{self.effect}")
                         fonction("BRU")
-                    if self.nom == "Tonnerre" or self.nom == "Electacle" or self.nom == "Poing Eclair" or self.nom == "Crocs Eclair" and "Sol" not in self.pkm_foe.l_type :
+                    if self.nom in ["Tonnerre", "Electacle", "Poing Eclair", "Crocs Eclair"] and "Sol" not in self.pkm_foe.l_type :
                         fonction = eval(f"self.{self.effect}")
                         fonction("PAR")
                     elif "Sol" in self.pkm_foe.l_type :
                         print("Echouer, le pokemon est immunise")
-                    if self.nom == "Laser Glace" or self.nom == "Poing Glace" or self.nom == "Crocs Givre":
+                    if self.nom in ["Laser Glace", "Poing Glace", "Crocs Givre"] :
                         fonction = eval(f"self.{self.effect}")
                         fonction("GEL")
                 if self.effect == "SleepEffect" :
@@ -806,13 +1007,10 @@ class Attaque():
                     print("Le contre-coup de l'attque la blesse")
                 if self.effect == "BoostDef" :
                     self.BoostDef(self.my_pkm)
-                    print("Boost de def Active")
                 if self.effect == "BoostAtkSpe" :
-                    print("Boost de Atk Spe Active")
                     self.BoostAtkSpe(self.my_pkm)
                 if self.effect == "ChanceBoostDef" :
                     self.ChanceBoostDef(self.my_pkm)
-                    print("Chance active")
                 if self.effect == "ChanceDiminuerDef" :
                     self.ChanceDiminuerDef(self.pkm_foe)
                 if self.effect == "ChanceDiminuerDefSpe" :
@@ -828,12 +1026,12 @@ class Attaque():
                         self.BaisseLaDef_spe(self.my_pkm)
                         
                 if self.effect == "BaisseLaDef" :
-                    if self.nom != "Marteau Mastoc" or self.nom != "Close Combat" or self.nom != "Surpuissance" :
+                    if self.nom not in ["Marteau Mastoc", "Close Combat", "Surpuissance"] :
                         self.BaisseLaDef(self.pkm_foe)
                     else :
                         self.BaisseLaDef(self.my_pkm)
                 if self.effect == "BaisseAtk" :
-                    if self.nom != "Marteau Mastoc" or self.nom != "Surpuissance" :
+                    if self.nom not in ["Marteau Mastoc", "Surpuissance"] :
                         self.BaisseAtk(self.pkm_foe)
                     else :
                         self.BaisseAtk(self.my_pkm)
@@ -854,21 +1052,23 @@ class Attaque():
                     self.Colere(self.my_pkm)
                 if self.effect == "Abri" :
                     self.Abri(self.my_pkm)
-                
-                
+                if self.effect == "Voltige" :
+                    self.Voltige(voltige, self.my_pkm)
+                        
     def InfligerDgtFindeTour(self) :
         if self.my_pkm.statut != "" :
                 if self.my_pkm.statut == "BRU" :
                     if self.my_pkm.hp != 0 :
-                        self.my_pkm.hp -= int((self.my_pkm.hp*7)/100)
+                        subis = int((self.my_pkm.hp*7)/100)
+                        if subis < 1 :
+                            subis = 1 
+                        self.my_pkm.hp -= subis
                         print(f"Inflige Brulure... HP restant : {self.my_pkm.hp}")
                 self.my_pkm.count_brulure += 1 
                 if self.my_pkm.statut == "PSN" and self.my_pkm.count_poison > 0 :
                     self.PoisonedEffect(self.my_pkm)
                     print(f"Inflige Poison sur {self.my_pkm.nom} ... HP restant {self.my_pkm.hp}:")      
                 self.my_pkm.count_poison += 1  
-    #def Affiche(self) :
-      #  print("Pour verifier :", self.nom)
 
 
 class Combat():
@@ -883,33 +1083,38 @@ class Combat():
         self.turn_me = True
         self.turn_bot = False
     
-    # J'ouvre mon Fichier Json ou il y a les infos pour chaque attaques et je les renvois a la fonction qui prepare le combat
+    # J'ouvre mon Fichier Json ou il y a les infos pour chaque attaques et je les renvois à la fonction qui prepare le combat
     def RecupererInfos(self, name):
         with open("infos_atk.json", "r") as ia :
             file = json.load(ia)
         for attaques in file :
             for k,v in attaques.items() :
                 if name == k :
-                    pu = int(v[0])
+                    pu = v[0]
                     precision = v[1]
                     prio = v[2]
                     t = v[3]
                     cat = v[4]
                     eff = v[5]
-        
         return pu, precision, prio, t, cat, eff
     
-    
     def AttaqueJoueur(self) :
-        myatk = random.choice(self.l_atk1)
-        myatk = "Abri"
+        while True :
+            for atq in self.l_atk1 :
+                print(f"{self.l_atk1.index(atq)+1}. {atq}")
+            try :
+                pos_atq = int(input("Choisissez votre attaque :"))
+                myatk = self.l_atk1[pos_atq-1]
+                break
+            except :
+                print("Entrez caractère valide")
         if self.pkm1.etat_ephemere == "DISPARU" :
             myatk = "Tunnel"
         elif self.pkm1.etat_ephemere == "ANGRY" :
             myatk = "Colère"
         puissance, precision, prio, type_, categorie, effect = self.RecupererInfos(myatk)
         # J'instancie l'attaque en fonction de celle recuperer
-        attaque = Attaque(myatk, puissance, precision, type_, categorie, prio, effect, pokemon1, pokemon2)
+        attaque = Attaque(myatk, puissance, precision, type_, categorie, prio, effect, pokemon1, pokemon2, "player")
         return attaque
         
     
@@ -922,12 +1127,50 @@ class Combat():
             myatk2 = "Colère"
         puissance, precision, prio, type_, categorie, effect = self.RecupererInfos(myatk2)
         # J'instancie l'attaque en fonction de celle recuperer
-        attaque2 = Attaque(myatk2, puissance, precision, type_, categorie, prio, effect, pokemon2, pokemon1)  
+        attaque2 = Attaque(myatk2, puissance, precision, type_, categorie, prio, effect, pokemon2, pokemon1, "bot")  
         return attaque2
-        
-
     
+    #  Voila la fonction qui me retourne tous les attributs lorsque je joue de nouveau un pokemon qui n'est pas K.O  
+    def Returned(self, nom, nature, hp, atk, defense, atkspe, defspe, vit, statut, alteration, brulure, poison) :
+        if nom in team.used :
+            with open("played.json", "r") as played :
+                file = json.load(played)
+            for data in file :
+                for k,v in data.items():
+                    if nom == k :
+                        nature = v[0]
+                        hp = v[1]
+                        atk = v[2]
+                        defense = v[3]
+                        atkspe = v[4]
+                        defspe = v[5]
+                        vit = v[6]
+                        statut = v[7]
+                        alteration = v[8]
+                        brulure = v[9]
+                        poison = v[10]
+            return nom, nature, hp, atk, defense, atkspe, defspe, vit, statut, alteration, brulure, poison
+        elif nom in team2.used :
+            with open("played2.json", "r") as played2 :
+                file = json.load(played2)
+            for data in file :
+                for k,v in data.items():
+                    if nom == k :   
+                        nature = v[0]
+                        hp = v[1]
+                        atk = v[2]
+                        defense = v[3]
+                        atkspe = v[4]
+                        defspe = v[5]
+                        vit = v[6]
+                        statut = v[7]
+                        alteration = v[8]
+                        brulure = v[9]
+                        poison = v[10]
+            return nom, nature, hp, atk, defense, atkspe, defspe, vit, statut, alteration, brulure, poison
+                    
     def DeroulementCombat(self) :
+        global pokemon1, pokemon2
         attaque_player = self.AttaqueJoueur()
         attaque_bot = self.AttaqueBot()
         if attaque_player.nom == "Abri" and attaque_bot.categorie != "Statut":
@@ -940,67 +1183,245 @@ class Combat():
         elif attaque_bot.nom == "Abri" and attaque_player.categorie == "Statut":
             attaque_bot.precision = 0
             attaque_bot.priorite = 5
-        print(attaque_player.nom, attaque_player.priorite, attaque_player.precision)
-        if attaque_player.nom == "Bluff" and pokemon1.counting_bluff == 0 and attaque_bot.nom == "Bluff" and pokemon2.counting_bluff == 0 : 
+        elif attaque_player.nom == "Coup Bas" and attaque_bot.categorie != "Statut":
+            attaque_player.priorite = 5
+        elif attaque_bot.nom == "Coup Bas" and attaque_player.categorie != "Statut":
+            attaque_bot.priorite = 5
+        if (attaque_player.nom == "Bluff" and self.pkm1.counting_bluff == 0) and (attaque_bot.nom == "Bluff" and self.pkm2.counting_bluff == 0) : 
             if self.pkm1.vit >= self.pkm2.vit :
                 attaque_player.CalculDegat()
                 attaque_bot.CalculDegat()
             else :
                 attaque_bot.CalculDegat()
                 attaque_player.CalculDegat()
-        elif attaque_player.nom == "Bluff" and pokemon1.counting_bluff == 0 :
+        elif attaque_player.nom == "Bluff" and self.pkm1.counting_bluff == 0 :
             attaque_player.CalculDegat()
             attaque_bot.CalculDegat()
-        elif attaque_bot.nom == "Bluff" and pokemon2.counting_bluff == 0 :
+        elif attaque_bot.nom == "Bluff" and self.pkm2.counting_bluff == 0 :
             attaque_bot.CalculDegat()
             attaque_player.CalculDegat()
         elif attaque_player.priorite > attaque_bot.priorite :
             attaque_player.CalculDegat()
+            if attaque_bot.nom == "Represailles" :
+                attaque_bot.puissance *= 2
             attaque_bot.CalculDegat()
         elif attaque_bot.priorite > attaque_player.priorite : 
             attaque_bot.CalculDegat()
+            if attaque_player.nom == "Represailles" :
+                attaque_player.puissance *= 2
             attaque_player.CalculDegat()
         elif attaque_bot.priorite == attaque_player.priorite :
             if self.pkm1.vit >= self.pkm2.vit :
                 attaque_player.CalculDegat()
+                if attaque_bot.nom == "Represailles" :
+                    attaque_bot.puissance *= 2
+                if attaque_player.effect == "ChangePkm" and not attaque_player.fail :
+                    self.pkm1 = attaque_player.ChangePkm("player")  
+                    pokemon1 = self.pkm1     
+                    attaque_player.my_pkm = self.pkm1
+                    attaque_bot.pkm_foe = self.pkm1
                 attaque_bot.CalculDegat()
+                if attaque_bot.effect == "ChangePkm" and not attaque_bot.fail  :
+                    self.pkm2 = attaque_bot.ChangePkm("bot")
+                    pokemon2 = self.pkm2
+                    attaque_player.pkm_foe = pokemon2
+                    attaque_bot.my_pkm = pokemon2
             else :
                 attaque_bot.CalculDegat()
+                if attaque_player.nom == "Represailles" :
+                    attaque_player.puissance *= 2
+                if attaque_bot.effect == "ChangePkm" and not attaque_bot.fail :
+                    self.pkm2 = attaque_bot.ChangePkm("bot")
+                    pokemon2 = self.pkm2
+                    attaque_player.pkm_foe = self.pkm2
+                    attaque_bot.my_pkm = self.pkm2
                 attaque_player.CalculDegat()
+                if attaque_player.effect == "ChangePkm" and not attaque_player.fail :
+                    self.pkm1 = attaque_player.ChangePkm("player")
+                    pokemon1 = self.pkm1    
+                    attaque_player.my_pkm = self.pkm1
+                    attaque_bot.pkm_foe = self.pkm1
+        
         
         attaque_bot.InfligerDgtFindeTour()
         attaque_player.InfligerDgtFindeTour()
+        attaque_bot.fail = False 
+        attaque_player.fail = False
+                   
+class Equipe() :
+    def __init__(self, no) :
+        self.no = no
+        self.l_pok = self.ReturnListeEquipe(self.no)
+        self.fighting = ""
+        self.liste_ko = []
+        self.ko_bot = []
+        self.used = []
+        self.trainer = self.ReturnTrainer(self.no)
+             
+    def EnCombat(self, cible) :
+        self.fighting = cible   
+        
+    def ReturnListeEquipe(self, no) :
+        with open("team.json", "r") as team :
+            file = json.load(team)
+        for liste in file:
+            for k, v in liste.items() :
+                if str(no) == k :
+                    liste_equipe = v
+        return liste_equipe
     
-            
-            
+    def ReturnTrainer(self, no) :
+        with open("trainer.json", "r") as trainer :
+            file = json.load(trainer)
+        for name in file:
+            for k, v in name.items() :
+                if str(no) == k :
+                    for x in v :
+                        nom_trainer = x
+        return nom_trainer
     
+    def ChangeStrikerAfterDeath(self, nb) :
+        if nb == 1 :
+            while True :
+                for x in self.l_pok :
+                    print(self.l_pok.index(x)+1, x)
+                next_ = int(input("Qui choisissez vous ?"))
+                new_pokemon = Pokemon(f'{self.l_pok[next_-1]}', 'male') 
+                if new_pokemon.nom not in self.liste_ko :
+                    print(f"{new_pokemon.nom} est envoye au combat")
+                    if new_pokemon.nom not in team2.used :
+                        new_pokemon.Stat()
+                    new_pokemon.combat = True
+                    self.EnCombat(new_pokemon.nom)
+                    return new_pokemon
+                else :
+                    print("Envoie au combat impossible")
+        elif nb == 2 :
+            while True :
+                next = random.choice(self.l_pok)
+                if next not in self.ko_bot :
+                    break
+            index = self.l_pok.index(next)
+            new_pokemon = Pokemon(f'{self.l_pok[index]}', 'male')
+            print(f"{self.l_pok[index]} est envoye au combat")
+            if new_pokemon.nom not in team2.used :
+                new_pokemon.Stat()
+            new_pokemon.combat = True
+            self.EnCombat(new_pokemon.nom)
+            return new_pokemon
+    
+    def Vainqueur(self) :
+        if len(team.liste_ko) == 6 :
+            print("Le bot a gagne")
+            
+        elif len(team2.ko_bot) == 6 :
+            print("Vous avez gagne")
+    
+    def DeleteContent(self, playedd) :
+        delete = []
+        with open(playedd, "w") as p :
+            json.dump(delete, p, indent=4)
+
+class Py() :
+    def __init__(self, l, L) :
+        self.l = l
+        self.L = L        
+    
+    def AfficherEcran(self) :
+        self.screen = pygame.display.set_mode((self.L, self.l))
+        pygame.display.set_caption("Pokemon")
+        ico = pygame.image.load("icone.png")
+        pygame.display.set_icon(ico)
+        bg = pygame.Color((1,1,1))
+        self.screen.fill(bg)
+        
+    def Overlay(self) :
+        img_overlay = pygame.image.load(r"battle/background.png").convert_alpha()
+        field1 = pygame.image.load(r"battle/field.png").convert_alpha()
+        overlay = pygame.Surface((600, 440))
+        overlay.fill((255,244,229))
+        x = (self.L - 600) // 2
+        y = (self.l - 440) // 2
+        overlay.blit(img_overlay, (0,0))
+        overlay.blit(field1, (0,300))      
+        self.screen.blit(overlay, (x,y))
         
         
+
+pygame.init()
+pygame.mixer.init()
+
+p = Py(800,800)
+   
+
+            
 
 # (nom, sexe, niv)       
-pokemon1 = Pokemon("Jungko","male",50)
-pokemon2 = Pokemon("Florizarre","femelle",50)
+team = Equipe(8)
+team2 = Equipe(9)
+pokemon1 = Pokemon(team.l_pok[0],"male")
+pokemon1.combat = True
+
+team.EnCombat(pokemon1.nom)
+pokemon2 = Pokemon(team2.l_pok[0],"male")
+team2.EnCombat(pokemon2.nom)
+
 pokemon1.Stat()
 pokemon2.Stat()
-pokemon1.AfficherStats()
-pokemon2.AfficherStats()
-
-
-combat = Combat(pokemon1, pokemon2, pokemon1.liste_atk, pokemon2.liste_atk)
-print("\nTOUR 1")
-combat.DeroulementCombat()
-print("\nTOUR 2")
-combat.DeroulementCombat()
-print("\nTOUR 3")
-combat.DeroulementCombat()
-print("\nTOUR 4")
-combat.DeroulementCombat()
+#pokemon1.AfficherStats()
+#pokemon2.AfficherStats()
 
 
 
 
+print(f"Le combat commence!\n{team2.trainer} souhaite vous affronter.\n{team2.trainer} envoie {team2.l_pok[0]}.\n{team.l_pok[0]} je te choisis !")
+running = True
 
-# (nom, type, puissance, taux_crit, precision, categorie, effet)
-#attaque = Attaque(test.liste_atk[0], 80, 80, 100, "Feu", "Physique")
-#attaque.Affiche()
-########## Faire heriter Pokemon a 54 classes enfants ?? ##############
+while running :
+
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT :
+            running = False
+            
+    p.AfficherEcran()  
+    p.Overlay()
+    pygame.display.flip()
+    c = 1
+    
+
+    
+    combat = Combat(pokemon1, pokemon2, pokemon1.liste_atk, pokemon2.liste_atk)
+    print(f"\nTOUR {c}")
+    print(pokemon1.nom, pokemon1.hp)
+    print(pokemon2.nom, pokemon2.hp)
+    combat.DeroulementCombat()
+        
+    c += 1
+        
+    if pokemon1.hp <= 0 :
+        team.liste_ko.append(pokemon1.nom)
+        if len(team.liste_ko) == 6 :
+            team.Vainqueur()
+            team.DeleteContent("played.json")
+            team2.DeleteContent("played2.json")
+            break
+        pokemon1.combat = False
+        pokemon1 = team.ChangeStrikerAfterDeath(1)
+        print(len(team.liste_ko))
+        print(len(team2.ko_bot))
+
+
+    elif pokemon2.hp <= 0 :
+        team2.ko_bot.append(pokemon2.nom)
+        team2.l_pok.remove(pokemon2.nom)
+        if len(team2.ko_bot) == 6 :
+            team.Vainqueur()
+            team.DeleteContent("played.json")
+            team2.DeleteContent("played2.json")
+            break
+        pokemon2.combat = False
+        pokemon2 = team2.ChangeStrikerAfterDeath(2)
+        print(len(team.liste_ko))
+        print(len(team2.ko_bot))
+
+pygame.quit()

@@ -12,14 +12,14 @@
             "Lance-Flammes",
             "Lame d'Air",
             "D\u00e9flagration",
-            "Atterissage"
+            "Atterrissage"
         ]
     },
     {
         "Tortank": [
             "Surf",
             "Laser Glace",
-            "Aurasph\u00e9re",
+            "Aurasph\u00e8re",
             "Vibrobscur"
         ]
     },
@@ -27,7 +27,7 @@
         "Pikachu": [
             "Tonnerre",
             "Electacle",
-            "Mur Lumi\u00e8re",
+            "Change Eclair",
             "Bluff"
         ]
     },
@@ -44,7 +44,7 @@
             "Laser Glace",
             "Hydrocanon",
             "Ebullition",
-            "Requiem"
+            "Tonnerre"
         ]
     },
     {
@@ -97,7 +97,7 @@
     },
     {
         "Jungko": [
-            "Lame Feuille",
+            "Lame-Feuille",
             "Giga-Sangsue",
             "Abri",
             "Synth\u00e8se"
@@ -130,7 +130,7 @@
     {
         "Galeking": [
             "Tacle Lourd",
-            "Seisme",
+            "S\u00e9isme",
             "Abri",
             "Poing Feu"
         ]
@@ -202,7 +202,7 @@
     {
         "Roitiflam": [
             "Surpuissance",
-            "Seisme",
+            "S\u00e9isme",
             "D\u00e9flagration",
             "Coup Bas"
         ]

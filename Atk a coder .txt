@@ -1,18 +1,12 @@
-Atk a coder :
-
-Lame de Roc   	\\\\\\\\\Taux crit elever
-Lame-Feuille	\\\\\\\\\Taux crit elever
-Magie Florale	\\\\\\\\\Taux crit 100%
-
-
-
-Chant Flamboyant BoostAtkSpe
-Mach Punch	Priorite +1
-Marteau Mastoc	BaisseLaDef, BaisseAtk, Mutiler
-Charge Glaive	Mutiler
-Luminocanon	ChanceDiminuerDefSpe de la cible ----
+gestion des echange de pokemon en tant que joueur
 
 
 
 
 
+
+si je suis geler je ne peux pas avoir peur
+si j'utilise rapace et que je tombe a 0 je suis KO
+revoir la gestion des alteration (si je dort je peux pas etre empoisonne etc)
+
+Pour verifier tout ca je dois gerer la gestion des attaques pour ma part
