@@ -24,10 +24,6 @@ class Map:
         self.map_layer.zoom = 2 # zoom map
         self.group = pyscroll.PyscrollGroup(map_layer=self.map_layer, default_layer=6)
 
-        self.switchs = []
-        for obj in self.tmx_data.objects:
-            type = obj.name.split()
-
     def add_player(self, player):
         self.group.add(player)
         self.player = player

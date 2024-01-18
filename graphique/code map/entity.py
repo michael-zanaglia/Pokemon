@@ -55,8 +55,6 @@ class Entity(pygame.sprite.Sprite):
                 self.image = self.all_images["down"][self.animation_index]
                 self.last_animation_time = current_time
 
-
-        
     def move(self, direction):
         if direction == 'left':
             self.position[0] -= 1
