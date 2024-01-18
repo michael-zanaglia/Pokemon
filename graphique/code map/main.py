@@ -1,10 +1,7 @@
 import pygame
-from game import Game
-from menu import Menu
+from menu import MainMenu
 pygame.init()
 
 if __name__ == "__main__":
-    menu = Menu()#agg menu
-    game = Game()
-    if menu
-    game.run()
+    menu = MainMenu()#agg menu
+    menu.run()
