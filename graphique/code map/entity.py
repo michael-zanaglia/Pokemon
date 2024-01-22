@@ -11,14 +11,14 @@ class Entity(pygame.sprite.Sprite):
         self.keylistener = keylistener
         self.sprite = pygame.image.load('Pokemon/graphique/sprite/hero_01_red_m_walk.png')
         self.image = Tool.split_image(self.sprite, 0, 0, 24, 32)
-        self.position = [0, 0]
+        self.position = [125, 180]
         self.rect: pygame.Rect = pygame.Rect(0, 0, 24, 32)
         self.all_images = self.get_all_images()
         self.animation_index = 0
         self.animation_delay = 100  # 1000 milliseconds (1 second)
         self.last_animation_time = 1
         self.image = self.all_images['down'][self.animation_index]
-
+        
     def update(self):
         self.check_move()
         self.rect.topleft = self.position

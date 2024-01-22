@@ -1,51 +1,94 @@
 import pygame
 import pygame_menu
-import time
+import json
+from game import Game  # Assicurati che il modulo "game" sia importato correttamente
 
-def on_button_press():
-    print("Il bottone è stato premuto!")
+class Menu_game:
+    def __init__(self):
+        ####Color####
+        self.blu = 255, 0, 0
+        self.green = 0, 255, 0
+        self.red = 0, 0, 255
+        self.width, self.height = 600, 600
+        self.surface = pygame.display.set_mode((self.width, self.height))
+        pygame.display.set_caption("Pokemon - Menu")
+        self.main_menu = self.create_main_menu()
+        self.clock = pygame.time.Clock()
+        # Menu base
+        self.menu = pygame_menu.Menu('Welcome', self.width, self.height,
+                                     theme=pygame_menu.themes.THEME_BLUE)
 
-def on_submenu_button_press():
-    print("Bottone nel sotto-menu premuto!")
+        # Music menu ######
+        path_music = "Pokemon/graphique/Menu/music/Chill_Travel.mp3"
+        pygame.mixer.init()
+        self.click_sound = pygame.mixer.Sound(path_music)
+        pygame.mixer.music.load(path_music)
+        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.play(-1)
+        # Img background ######
+        self.background_image_path = 'Pokemon/graphique/Menu/image/pokemon-wallpaper.jpg'
+        # self.background = pygame_menu.BaseImage(image_path=)
+        # pRENDERE LE grandezze con getwidth e get height##################################################
 
-# Inizializza pygame
-pygame.init()
+    def create_main_menu(self):  
+        mytheme = pygame_menu.themes.THEME_BLUE.copy()
+        mytheme.menubar_close_button = False  # Per evitare il pulsante di chiusura sulla barra del menu
 
-# Creare un oggetto Menu principale
-main_menu = pygame_menu.Menu(300, 400, 'Menu Principale', theme=pygame_menu.themes.THEME_BLUE)
+        # Imposta il colore di sfondo del menu principale
+        mytheme.widget_background_color = (25, 0, 50)
 
-# Aggiungere un bottone al menu principale
-main_menu.add.button('Premi Me', on_button_press)
+        main_menu = pygame_menu.Menu('Main Menu', self.width, self.height, theme=mytheme)
 
-# Creare un oggetto Sotto-Menu
-submenu = pygame_menu.Menu(200, 300, 'Sotto-Menu', theme=pygame_menu.themes.THEME_BLUE)
+        main_menu.add.image(image_path='Pokemon/graphique/Menu/image/pokemon-wallpaper.jpg', angle=0, scale=(self.width / 100, self.height / 100))
 
-# Aggiungere un bottone al sotto-menu
-submenu.add.button('Premi Me Nel Sotto-Menu', on_submenu_button_press)
+        main_menu.add.button('Play', self.game_run)
+        main_menu.add.button('Play combat', self.play_combat)
+        main_menu.add.button('Quit', pygame_menu.events.EXIT)
+        return main_menu
 
-# Aggiungere il sotto-menu al menu principale
-main_menu.add.button('Apri Sotto-Menu', submenu)
+    def run(self, test: bool = False) -> None:
+        while True:
+            events = pygame.event.get()
+            for event in events:
+                if event.type == pygame.QUIT:
+                    pygame.mixer.music.stop()
+                    pygame.quit()
+                    return
 
-# Esegui il loop degli eventi
-running = True
-while running:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_ESCAPE:
-                running = False
+            self.surface.fill((25, 0, 50))
+            self.background.draw(self.surface)  # Disegna lo sfondo direttamente
+            self.main_menu.update(events)
+            self.main_menu.draw(self.surface)
+            pygame.display.flip()
 
-    # Aggiorna il menu principale
-    main_menu.mainloop(None, None, disable_loop=True)
+            if test:
+                break
 
-    # Puoi eseguire altre azioni qui, ma assicurati che il codice non blocchi l'esecuzione
+            pygame.mixer.music.set_volume(0.5)  # Aggiorna il volume della musica
+            self.clock.tick(30)  # Regola il frame rate secondo le tue esigenze
 
-    # Aggiorna lo schermo (anche se non visibile)
-    pygame.display.flip()
+    def game_run(self):
+        game = Game()
+        game.run()
 
-    # Introduci un piccolo ritardo per non appesantire la CPU
-    time.sleep(0.01)
+    def play_combat(self):
+        # Implementa la logica per avviare il combattimento
+        pass
 
-# Chiudi pygame
-pygame.quit()
+if __name__ == '__main__':
+    pygame.init()
+    main_menu = Menu_game()
+
+    while True:
+        events = pygame.event.get()
+        for event in events:
+            if event.type == pygame.QUIT:
+                pygame.mixer.music.stop()
+                pygame.quit()
+                break
+        main_menu.surface.fill((25, 0, 50))
+        main_menu.main_menu.update(events)
+        main_menu.main_menu.draw(main_menu.surface)
+        pygame.display.flip()
+        main_menu.run()
+        main_menu.clock.tick()  # Controlla il frame rate
