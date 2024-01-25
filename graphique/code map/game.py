@@ -4,7 +4,7 @@ from screen import Screen
 from map import Map
 from entity import Entity
 from keylistener import KeyListener
-
+pygame.init()
 class Game:
     def __init__(self):
         self.running = True
