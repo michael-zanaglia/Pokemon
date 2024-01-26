@@ -3,13 +3,41 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "C:/Users/Elfo98/OneDrive/Documenti/GitHub/Pokemon/graphique/map0.tmx",
+    "activeFile": "C:/Users/Elfo98/Documents/GitHub/Pokemon/graphique/map0.tmx",
     "expandedProjectPaths": [
+        "C:/Users/Elfo98/OneDrive/Documenti/GitHub/Pokemon/graphique",
         "C:/Users/Elfo98/OneDrive/Documenti/GitHub/Pokemon/graphique/sale",
-        "C:/Users/Elfo98/OneDrive/Documenti/GitHub/Pokemon/graphique"
+        ".",
+        "C:/Users/Elfo98/Documents/GitHub/Pokemon/graphique",
+        "sale"
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
+        "C:/Users/Elfo98/Documents/GitHub/Pokemon/graphique/map0.tmx": {
+            "expandedGroupLayers": [
+                18,
+                9
+            ],
+            "expandedObjectLayers": [
+                19,
+                18,
+                17
+            ],
+            "scale": 3,
+            "selectedLayer": 6,
+            "viewCenter": {
+                "x": 269.99999999999994,
+                "y": 183.66666666666663
+            }
+        },
+        "C:/Users/Elfo98/Documents/GitHub/Pokemon/graphique/map0.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "C:/Users/Elfo98/Documents/GitHub/Pokemon/graphique/tiledmap.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
         "C:/Users/Elfo98/OneDrive/Documenti/GitHub/Pokemon/graphique/map0.tmx": {
             "expandedGroupLayers": [
                 9,
@@ -59,13 +87,14 @@
             ],
             "expandedObjectLayers": [
                 6,
-                5
+                5,
+                7
             ],
-            "scale": 1.7040624999999998,
-            "selectedLayer": 4,
+            "scale": 2,
+            "selectedLayer": 0,
             "viewCenter": {
-                "x": 393.4714835870164,
-                "y": 238.25417201540438
+                "x": 292.5,
+                "y": 198
             }
         },
         "tiledmap.tsx": {
@@ -79,12 +108,16 @@
     "map.tileWidth": 16,
     "map.width": 30,
     "openFiles": [
-        "C:/Users/Elfo98/OneDrive/Documenti/GitHub/Pokemon/graphique/map0.tmx",
-        "sale/sale_1.tmx"
+        "sale/sale_1.tmx",
+        "C:/Users/Elfo98/Documents/GitHub/Pokemon/graphique/map0.tmx"
     ],
     "project": "map.tiled-project",
+    "property.type": "string",
     "recentFiles": [
         "sale/sale_1.tmx",
+        "C:/Users/Elfo98/Documents/GitHub/Pokemon/graphique/map0.tmx",
+        "C:/Users/Elfo98/Documents/GitHub/Pokemon/graphique/tiledmap.tsx",
+        "C:/Users/Elfo98/Documents/GitHub/Pokemon/graphique/map0.tsx",
         "C:/Users/Elfo98/OneDrive/Documenti/GitHub/Pokemon/graphique/map0.tmx",
         "map0.tmx",
         "tiledmap.tsx",

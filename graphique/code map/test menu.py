@@ -18,6 +18,14 @@ class Menu_game:
         self.background_image = pygame.image.load('Pokemon/graphique/Menu/image/pokemon-wallpaper.jpg')
         self.background_image = pygame.transform.scale(self.background_image, (self.width, self.height))
 
+         # Music menu
+        path_music = "Pokemon/graphique/Menu/music/pokemon_experienceM.mp3"
+        pygame.mixer.init()
+        self.click_sound = pygame.mixer.Sound(path_music)
+        pygame.mixer.music.load(path_music)
+        pygame.mixer.music.set_volume(0.5)
+        pygame.mixer.music.play(-1)
+
     def create_main_menu(self):  
         blue = (0, 0, 255)
         green = (0, 255, 0)
