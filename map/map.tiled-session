@@ -3,26 +3,31 @@
         "height": 4300,
         "width": 2
     },
-    "activeFile": "",
+    "activeFile": "C:/Users/Elfo98/OneDrive/Documenti/GitHub/Pokemon/graphique/map0.tmx",
     "expandedProjectPaths": [
+        "C:/Users/Elfo98/OneDrive/Documenti/GitHub/Pokemon/graphique/sale",
+        "C:/Users/Elfo98/OneDrive/Documenti/GitHub/Pokemon/graphique"
     ],
     "file.lastUsedOpenFilter": "All Files (*)",
     "fileStates": {
         "C:/Users/Elfo98/OneDrive/Documenti/GitHub/Pokemon/graphique/map0.tmx": {
             "expandedGroupLayers": [
                 9,
-                8
+                8,
+                12
             ],
             "expandedObjectLayers": [
-                10,
-                8
+                10
             ],
-            "scale": 0.5,
-            "selectedLayer": 0,
+            "scale": 1.5,
+            "selectedLayer": 6,
             "viewCenter": {
-                "x": 321,
-                "y": 365
+                "x": 432.66666666666663,
+                "y": 236.66666666666669
             }
+        },
+        "C:/Users/Elfo98/OneDrive/Documenti/GitHub/Pokemon/graphique/tiledmap.tsx": {
+            "scaleInDock": 1
         },
         "map0.tmx": {
             "scale": 0.75,
@@ -52,11 +57,15 @@
                 3,
                 5
             ],
+            "expandedObjectLayers": [
+                6,
+                5
+            ],
             "scale": 1.7040624999999998,
             "selectedLayer": 4,
             "viewCenter": {
-                "x": 149.93581514762516,
-                "y": 160.49880799559878
+                "x": 393.4714835870164,
+                "y": 238.25417201540438
             }
         },
         "tiledmap.tsx": {
@@ -70,9 +79,13 @@
     "map.tileWidth": 16,
     "map.width": 30,
     "openFiles": [
+        "C:/Users/Elfo98/OneDrive/Documenti/GitHub/Pokemon/graphique/map0.tmx",
+        "sale/sale_1.tmx"
     ],
     "project": "map.tiled-project",
     "recentFiles": [
+        "sale/sale_1.tmx",
+        "C:/Users/Elfo98/OneDrive/Documenti/GitHub/Pokemon/graphique/map0.tmx",
         "map0.tmx",
         "tiledmap.tsx",
         "map0.tsx"
