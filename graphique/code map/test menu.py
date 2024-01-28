@@ -3,6 +3,8 @@ import pygame_menu
 from pygame_menu import sound
 import json
 import sys
+sys.path.append('C:/Users/Elfo98/Documents/GitHub/Pokemon')
+from poke import Pokemon  # Ora puoi importare normalmente il file poke.py
 from pygame_menu.widgets import Button
 from game import Game  # Assicurati che il modulo "game" sia importato correttamente
 
@@ -51,15 +53,25 @@ class Menu_game:
         sub_menu_theme = pygame_menu.themes.THEME_BLUE.copy()
         sub_menu_theme.menubar_close_button = False
         sub_menu_theme.background_color = Ctransparent
-        sub_menux = pygame_menu.Menu('a', self.width, self.height, theme=sub_menu_theme)
-
+    ### MENU ### Choix adversaire ###
+        num = 0 
+        choix_adversaire = pygame_menu.Menu(' Choix Adversaire ', self.width, self.height, theme=sub_menu_theme)
         for button in self.equipe_btn():
-            sub_menux.add.button(*button, self.play_combat, background_color=CtransparentBtn, selection_color=blue, font_size=20, font_color=white)
-
-        sub_menux.add.button('Back', pygame_menu.events.BACK, background_color=CtransparentBtn, selection_color=green, font_size=Fsize, font_color=rouge)
-
+            choix_adversaire.add.button(*button, self.choix_adversaire, background_color=CtransparentBtn, selection_color=rouge, font_size=20, font_color=white)
+            num += 1 
+            print(f"{num}")
+    ### MENU ### Choix equipe ###
+        choix_equipe = pygame_menu.Menu(' Choix Equipe ', self.width, self.height, theme=sub_menu_theme)
+        num = 0
+        for button in self.equipe_btn():
+            choix_equipe.add.button(*button, self.play_combat, background_color=CtransparentBtn, selection_color=blue, font_size=20, font_color=white)
+            num += 1
+            print(f"{num}")
+        
+        choix_equipe.add.button('Back', pygame_menu.events.BACK, background_color=CtransparentBtn, selection_color=green, font_size=Fsize, font_color=rouge)
+    ### MAIN ### MENU ###
         main_menu.add.button('Play', self.game_run, background_color=Ctransparent, selection_color=blue, font_size=Fsize, font_color=white)
-        main_menu.add.button('Play combat', sub_menux, background_color=Ctransparent, selection_color=blue, font_size=Fsize, font_color=white)
+        main_menu.add.button('Play combat', choix_equipe, background_color=Ctransparent, selection_color=blue, font_size=Fsize, font_color=white)
         main_menu.add.button('Quit', pygame_menu.events.EXIT, background_color=Ctransparent, selection_color=green, font_size=50, font_color=rouge)
         
         sound_game = sound.Sound()
@@ -116,8 +128,18 @@ class Menu_game:
         pygame.mixer.music.play(-1)
         game = Game()
         game.run()
-
-    def play_combat(self):
+# A FAIRE
+    def choix_adversaire(self, button_text):
+        choice = button_text.split(":")[1].strip()
+        print("Scelta dell'avversario: ", choice)
+#       Pokemon.choix_Adversaire(choice)
+        #ajouter une méthode qui fait que le joueur 2 prend l'équipe
+    def choix_equipe(self, button_text):
+        # Richiama la funzione start_combat di poke.py passando la scelta della squadra
+        choice = button_text.split(':')[1].strip()  # Estrai la scelta dopo il primo ":" e rimuovi eventuali spazi
+        print("Scelta della squadra: ", choice)
+ #       Pokemon.choix_Equipe(choice)
+        #ajouter une méthode qui fait que le joueur 1 prend l'équipe
         pass
 
 if __name__ == '__main__':
