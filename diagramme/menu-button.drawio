@@ -1,0 +1,146 @@
+<mxfile host="65bd71144e">
+    <diagram id="QhqDUP8_L-7XBktnPHjZ" name="Page-1">
+        <mxGraphModel dx="399" dy="492" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="5" style="edgeStyle=none;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;fontSize=16;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="405" y="260" as="targetPoint"/>
+                        <mxPoint x="405" y="260" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="16" value="&lt;span style=&quot;font-weight: 400;&quot;&gt;Menu_game&lt;/span&gt;" style="swimlane;whiteSpace=wrap;html=1;rounded=0;glass=0;fontSize=10;" parent="1" vertex="1">
+                    <mxGeometry x="115" y="30" width="310" height="250" as="geometry">
+                        <mxRectangle x="115" y="30" width="100" height="30" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="21" value="&lt;div&gt;&lt;b&gt;+ __init__()&amp;nbsp;&lt;/b&gt;: constructeur&lt;/div&gt;&lt;div&gt;&lt;b&gt;+ create_main_menu()&lt;/b&gt; : crée le menu principal&lt;/div&gt;&lt;div&gt;&lt;b&gt;+ opponent_btn()&lt;/b&gt; : Retourne les boutons pour les adversaires&lt;/div&gt;&lt;div&gt;&lt;b&gt;+ team_btn()&amp;nbsp;&lt;/b&gt;: Retourne les boutons pour les équipes&lt;/div&gt;&lt;div&gt;&lt;b&gt;+ on_resize()&amp;nbsp;&amp;nbsp;&lt;/b&gt;: redimensionne la fenêtre&lt;/div&gt;&lt;div&gt;&lt;b&gt;+ run()&amp;nbsp;&lt;/b&gt;: lance le cycle de jeu&lt;/div&gt;&lt;div&gt;&lt;b&gt;+ game_run()&amp;nbsp;&lt;/b&gt;: lance le jeu&lt;/div&gt;&lt;div&gt;&lt;b&gt;+ opponent_choice()&amp;nbsp;&lt;/b&gt;: gère le choix de l'adversaire&lt;/div&gt;&lt;div&gt;&lt;b&gt;+ team_choice()&amp;nbsp;&lt;/b&gt;: gère le choix de l'équipe&lt;/div&gt;" style="whiteSpace=wrap;html=1;rounded=0;glass=0;fontSize=10;align=center;" parent="16" vertex="1">
+                    <mxGeometry y="120" width="310" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="23" value="&lt;font style=&quot;&quot;&gt;- width: int&lt;br&gt;- height: int&amp;nbsp;&lt;br&gt;- surface: Surface&lt;br&gt;- main_menu: Menu&lt;br&gt;- clock: Clock&lt;br&gt;- background_image: Image&lt;/font&gt;&lt;font style=&quot;&quot;&gt;&lt;br&gt;- click_sound: Sound&lt;/font&gt;" style="whiteSpace=wrap;html=1;rounded=0;glass=0;fontSize=10;align=center;" parent="16" vertex="1">
+                    <mxGeometry y="20" width="310" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="24" style="edgeStyle=none;html=1;fontSize=9;entryX=0;entryY=0.5;entryDx=0;entryDy=0;exitX=1;exitY=1;exitDx=0;exitDy=0;" parent="1" source="23" target="26" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="560" y="115" as="targetPoint"/>
+                        <Array as="points">
+                            <mxPoint x="480" y="220"/>
+                        </Array>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="25" style="edgeStyle=none;html=1;exitX=0;exitY=0.75;exitDx=0;exitDy=0;fontSize=16;entryX=0;entryY=0.75;entryDx=0;entryDy=0;" parent="1" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="860" y="250" as="targetPoint"/>
+                        <mxPoint x="860" y="250" as="sourcePoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="26" value="&lt;span style=&quot;font-weight: 400;&quot;&gt;Game&lt;/span&gt;" style="swimlane;whiteSpace=wrap;html=1;rounded=0;glass=0;fontSize=10;" parent="1" vertex="1">
+                    <mxGeometry x="610" y="270" width="190" height="180" as="geometry">
+                        <mxRectangle x="560" y="30" width="100" height="30" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="27" value="&lt;b&gt;+ __init__()&lt;br&gt;+ handle_input()&lt;br&gt;+ run()&lt;br&gt;&lt;/b&gt;" style="whiteSpace=wrap;html=1;rounded=0;glass=0;fontSize=10;align=center;" parent="26" vertex="1">
+                    <mxGeometry y="120" width="190" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="28" value="- running: bool&lt;br&gt;- screen: Screen&lt;br&gt;- map: Map&lt;br&gt;- keylistener: Keylistener&lt;br&gt;- player: Entity&lt;br&gt;- menu: Menu_game" style="whiteSpace=wrap;html=1;rounded=0;glass=0;fontSize=10;align=center;" parent="26" vertex="1">
+                    <mxGeometry y="20" width="190" height="100" as="geometry"/>
+                </mxCell>
+                <mxCell id="39" style="edgeStyle=none;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=1;entryDx=0;entryDy=0;fontSize=9;" parent="1" source="29" target="26" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="29" value="&lt;span style=&quot;font-weight: 400;&quot;&gt;KeyListener&lt;/span&gt;" style="swimlane;whiteSpace=wrap;html=1;rounded=0;glass=0;fontSize=10;startSize=23;" parent="1" vertex="1">
+                    <mxGeometry x="230" y="500" width="190" height="100" as="geometry">
+                        <mxRectangle x="560" y="30" width="100" height="30" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="30" value="&lt;b&gt;+ add_keys()&lt;br&gt;+ key_pressed()&lt;br&gt;+ clear()&lt;br&gt;&lt;/b&gt;" style="whiteSpace=wrap;html=1;rounded=0;glass=0;fontSize=10;align=center;" parent="29" vertex="1">
+                    <mxGeometry y="50" width="190" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="31" value="- keys: list[]" style="whiteSpace=wrap;html=1;rounded=0;glass=0;fontSize=10;align=center;" parent="29" vertex="1">
+                    <mxGeometry y="20" width="190" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="40" style="edgeStyle=none;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;fontSize=9;" parent="1" source="35" target="26" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="35" value="&lt;span style=&quot;font-weight: 400;&quot;&gt;Menu_gamex&lt;/span&gt;" style="swimlane;whiteSpace=wrap;html=1;rounded=0;glass=0;fontSize=10;" parent="1" vertex="1">
+                    <mxGeometry x="840" y="620" width="190" height="100" as="geometry">
+                        <mxRectangle x="560" y="30" width="100" height="30" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="36" value="&lt;b&gt;+ menu_game()&lt;br&gt;+ map0()&lt;br&gt;&lt;/b&gt;" style="whiteSpace=wrap;html=1;rounded=0;glass=0;fontSize=10;align=center;" parent="35" vertex="1">
+                    <mxGeometry y="60" width="190" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="37" value="- height : int&lt;br&gt;- width : int" style="whiteSpace=wrap;html=1;rounded=0;glass=0;fontSize=10;align=center;" parent="35" vertex="1">
+                    <mxGeometry y="20" width="190" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="45" style="edgeStyle=none;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;fontSize=9;" parent="1" source="42" target="29" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="46" style="edgeStyle=none;html=1;exitX=1;exitY=0;exitDx=0;exitDy=0;fontSize=9;entryX=0.25;entryY=1;entryDx=0;entryDy=0;" parent="1" source="42" target="26" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="590" y="240" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="42" value="&lt;span style=&quot;font-weight: 400;&quot;&gt;Entity&lt;/span&gt;" style="swimlane;whiteSpace=wrap;html=1;rounded=0;glass=0;fontSize=10;startSize=23;" parent="1" vertex="1">
+                    <mxGeometry x="470" y="670" width="190" height="250" as="geometry">
+                        <mxRectangle x="560" y="30" width="100" height="30" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="43" value="&lt;b&gt;- __init__ : Constructor&lt;br&gt;+ update()&lt;br&gt;+ check_move()&lt;br&gt;+ update_move()&lt;br&gt;+ move()&lt;br&gt;+ check collisions()&lt;br&gt;+ get_all_images()&lt;br&gt;&lt;/b&gt;" style="whiteSpace=wrap;html=1;rounded=0;glass=0;fontSize=10;align=center;" parent="42" vertex="1">
+                    <mxGeometry y="130" width="190" height="120" as="geometry"/>
+                </mxCell>
+                <mxCell id="44" value="- keylistener: Keylistener&lt;br&gt;- position : list[int]&lt;br&gt;- spirte : Surface&lt;br&gt;- rect : Rect&lt;br&gt;- all_image : dict&lt;br&gt;- animation_index : int&lt;br&gt;- animation_delay : int&lt;br&gt;last_ animation_time : int" style="whiteSpace=wrap;html=1;rounded=0;glass=0;fontSize=10;align=center;" parent="42" vertex="1">
+                    <mxGeometry y="20" width="190" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="58" style="edgeStyle=none;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;fontSize=9;" parent="1" source="50" edge="1">
+                    <mxGeometry relative="1" as="geometry">
+                        <mxPoint x="800" y="390" as="targetPoint"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="48" value="&lt;span style=&quot;font-weight: 400;&quot;&gt;Map&lt;/span&gt;" style="swimlane;whiteSpace=wrap;html=1;rounded=0;glass=0;fontSize=10;" parent="1" vertex="1">
+                    <mxGeometry x="950" y="255" width="190" height="210" as="geometry">
+                        <mxRectangle x="560" y="30" width="100" height="30" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="49" value="&lt;b&gt;+ __init__(screen: Screen)&lt;br&gt;+ switch_map(map: str)&lt;br&gt;+ check_collision()&lt;br&gt;+ add_player(player: any)&lt;br&gt;+ update()&lt;br&gt;&lt;/b&gt;" style="whiteSpace=wrap;html=1;rounded=0;glass=0;fontSize=10;align=center;" parent="48" vertex="1">
+                    <mxGeometry y="130" width="190" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="50" value="&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;- screen :&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;- screen: Screen&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;- tmx_data: pytmx.TiledMap&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;- map_layer: pyscroll.BufferedRenderer&amp;nbsp;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;- group: pyscroll.PyscrollGroup&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;&amp;nbsp;- player: Any&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;- switchs: Union[List[Switch], None]&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;background-color: initial;&quot;&gt;- wallx: List[pygame.Rect]&amp;nbsp;&lt;/span&gt;&lt;/div&gt;" style="whiteSpace=wrap;html=1;rounded=0;glass=0;fontSize=10;align=center;" parent="48" vertex="1">
+                    <mxGeometry y="20" width="190" height="110" as="geometry"/>
+                </mxCell>
+                <mxCell id="59" style="edgeStyle=none;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontSize=9;" parent="1" source="52" target="26" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="51" value="&lt;span style=&quot;font-weight: 400;&quot;&gt;Screen&lt;/span&gt;" style="swimlane;whiteSpace=wrap;html=1;rounded=0;glass=0;fontSize=10;" parent="1" vertex="1">
+                    <mxGeometry x="610" y="20" width="190" height="180" as="geometry">
+                        <mxRectangle x="560" y="30" width="100" height="30" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="52" value="&lt;b&gt;+ __init__()&lt;br&gt;+ update()&lt;br&gt;+ get_size() -&amp;gt; Tuple[int, int]&lt;br&gt;+ get_display() -&amp;gt; pygame.Surface&lt;br&gt;&lt;/b&gt;" style="whiteSpace=wrap;html=1;rounded=0;glass=0;fontSize=10;align=center;" parent="51" vertex="1">
+                    <mxGeometry y="100" width="190" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="53" value="- display : pygame.Surface&lt;br&gt;- clock : pygame.time.Clock&lt;br&gt;- framerate : int" style="whiteSpace=wrap;html=1;rounded=0;glass=0;fontSize=10;align=center;" parent="51" vertex="1">
+                    <mxGeometry y="20" width="190" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="62" style="edgeStyle=none;html=1;entryX=1;entryY=0.25;entryDx=0;entryDy=0;fontSize=9;" parent="1" source="54" target="48" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="54" value="&lt;span style=&quot;font-weight: 400;&quot;&gt;Switch&lt;/span&gt;" style="swimlane;whiteSpace=wrap;html=1;rounded=0;glass=0;fontSize=10;" parent="1" vertex="1">
+                    <mxGeometry x="1160" y="70" width="190" height="130" as="geometry">
+                        <mxRectangle x="560" y="30" width="100" height="30" as="alternateBounds"/>
+                    </mxGeometry>
+                </mxCell>
+                <mxCell id="55" value="&lt;b&gt;+ __init__(type, name, hitbox, port)&lt;br&gt;+ check_collision( temp_hitbox)&lt;br&gt;&lt;/b&gt;" style="whiteSpace=wrap;html=1;rounded=0;glass=0;fontSize=10;align=center;" parent="54" vertex="1">
+                    <mxGeometry y="80" width="190" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="56" value="&lt;div style=&quot;&quot;&gt;- hitbox : pygame.Rect&lt;/div&gt;&lt;div style=&quot;&quot;&gt;- port : int&lt;/div&gt;&lt;div style=&quot;&quot;&gt;- name : str&lt;/div&gt;&lt;div style=&quot;&quot;&gt;- type : str&lt;/div&gt;" style="whiteSpace=wrap;html=1;rounded=0;glass=0;fontSize=10;align=center;" parent="54" vertex="1">
+                    <mxGeometry y="20" width="190" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="60" style="edgeStyle=none;html=1;exitX=1;exitY=1;exitDx=0;exitDy=0;entryX=0;entryY=0;entryDx=0;entryDy=0;fontSize=9;" parent="1" source="51" target="48" edge="1">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>

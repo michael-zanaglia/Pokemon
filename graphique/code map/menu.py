@@ -4,23 +4,26 @@ from pygame_menu import sound
 import json
 import sys
 # sys.path.append('C:/Users/Elfo98/Documents/GitHub/Pokemon')
-# from poke import Pokemon  # Ora puoi importare normalmente il file poke.py
+# from poke import Pokemon  # Now you can import the poke.py file normally
 from pygame_menu.widgets import Button
-from game import Game  # Assicurati che il modulo "game" sia importato correttamente
+from game import Game  # Make sure the "game" module is correctly imported
 
 pygame.init()
 
 class Menu_game:
     def __init__(self):
+        # Window dimensions
         self.width, self.height = 800, 600
         self.surface = pygame.display.set_mode((self.width, self.height), pygame.RESIZABLE)
         pygame.display.set_caption("Pokemon - Menu")
+        # Create the main menu
         self.main_menu = self.create_main_menu()
         self.clock = pygame.time.Clock()
+        # Load background image
         self.background_image = pygame.image.load('Pokemon/graphique/Menu/image/pokemon-wallpaper.jpg')
         self.background_image = pygame.transform.scale(self.background_image, (self.width, self.height))
 
-         # Music menu
+         # Music for the menu
         path_music = "Pokemon/graphique/Menu/music/pokemon_experienceM.mp3"
         pygame.mixer.init()
         self.click_sound = pygame.mixer.Sound(path_music)
@@ -28,55 +31,65 @@ class Menu_game:
         pygame.mixer.music.set_volume(0.5)
         pygame.mixer.music.play(-1)
 
-    def create_main_menu(self):  
+    def create_main_menu(self): 
+        # Colors 
         blue = (0, 0, 255)
         green = (0, 255, 0)
-        rouge = (255, 0, 0)
+        red = (255, 0, 0)
         white = (255, 255, 255)
-        Ctransparent = (0, 0, 0, 50)
-        Ctransparent2 = (0, 0, 0, 0)
-        CtransparentBtn = (0, 0, 0, 90)
-        Fsize = 30
-        
+        # Transparent backgrounds
+        transparent = (0, 0, 0, 50)
+        transparent2 = (0, 0, 0, 0)
+        transparent_button = (0, 0, 0, 90)
+        # Font size
+        font_size = 60
+        # Pokemon font
+        font = pygame.font.Font('Pokemon/graphique\Menu\Font\pokemon_pixel_font.ttf', font_size)
+        # MENU THEMES #
         main_menu_theme = pygame_menu.themes.THEME_BLUE.copy()
+        main_menu_theme.title_bar_style = pygame_menu.widgets.MENUBAR_STYLE_NONE
         main_menu_theme.menubar_close_button = False
-        main_menu_theme.background_color = Ctransparent2  
-
+        main_menu_theme.background_color = transparent2  
+        main_menu_theme.title_font = font
         main_menu_theme.widget_font = pygame_menu.font.FONT_MUNRO
-
+        main_menu_theme.widget_margin = (0,10) # (x,y) in pixels
+        
+        # Create the main MENU
         main_menu = pygame_menu.Menu(
             height=self.height,
             theme=main_menu_theme,
-            title='Pokémon',
+            title='',
             width=self.width
         )
-        sub_menu_theme = pygame_menu.themes.THEME_BLUE.copy()
-        sub_menu_theme.menubar_close_button = False
-        sub_menu_theme.background_color = Ctransparent
-    ### MENU ### Choix adversaire ###
+        
+    ### MENU ### Opponent Selection ###
         num = 0 
-        choix_adversaire = pygame_menu.Menu(' Choix Adversaire ', self.width, self.height, theme=sub_menu_theme)
-        for button in self.equipe_btn():
-            choix_adversaire.add.button(*button, self.choix_adversaire, background_color=CtransparentBtn, selection_color=rouge, font_size=20, font_color=white)
+        opponent_selection = pygame_menu.Menu(' Opponent Selection ', self.width, self.height, theme=main_menu_theme)
+        
+        for button in self.team_btn():
+            opponent_selection.add.button(*button, self.opponent_choice, background_color=transparent_button, selection_color=red, font_size=20, font_color=white)
             num += 1 
             print(f"{num}")
-    ### MENU ### Choix equipe ###
-        choix_equipe = pygame_menu.Menu(' Choix Equipe ', self.width, self.height, theme=sub_menu_theme)
+    ### MENU ### Team Selection ###
+        team_selection = pygame_menu.Menu(' Team Selection ', self.width, self.height, theme=main_menu_theme)
+        
         num = 0
-        for button in self.adversaire_btn():
-            choix_equipe.add.button(*button, self.choix_equipe, background_color=CtransparentBtn, selection_color=blue, font_size=20, font_color=white)
+        for button in self.opponent_btn():
+            team_selection.add.button(*button, self.team_choice, background_color=transparent_button, selection_color=blue, font_size=20, font_color=white)
             num += 1
             print(f"{num}")
-        choix_equipe.add.button('Back', pygame_menu.events.BACK, background_color=CtransparentBtn, selection_color=green, font_size=Fsize, font_color=rouge)
-    ### MENU ### Sub menu play combat###
-        sub_menu_play = pygame_menu.Menu("Play combact", self.width, self.height, theme=sub_menu_theme)
-        sub_menu_play.add.button(choix_adversaire.get_title(), choix_adversaire)
-        sub_menu_play.add.button(choix_equipe.get_title(), choix_equipe)
+        team_selection.add.button('Back', pygame_menu.events.BACK, background_color=transparent_button, selection_color=green, font_size=font_size, font_color=red)
+        team_selection.menubar_close_button = False
+    ### MENU ### Submenu Selection###
+        sub_menu_play = pygame_menu.Menu("", self.width, self.height, theme=main_menu_theme)
+        sub_menu_play.add.button(opponent_selection.get_title(), opponent_selection, background_color=transparent, selection_color=blue, font_size=font_size, font_color=white)
+        sub_menu_play.add.button(team_selection.get_title(), team_selection, background_color=transparent, selection_color=blue, font_size=font_size, font_color=white)
+        sub_menu_play.menubar_close_button = False
     ### MAIN ### MENU ###
-        main_menu.add.button('Play', self.game_run, background_color=Ctransparent, selection_color=blue, font_size=Fsize, font_color=white)
-        main_menu.add.button('Play combat', sub_menu_play, background_color=Ctransparent, selection_color=blue, font_size=Fsize, font_color=white)
-        main_menu.add.button('Quit', pygame_menu.events.EXIT, background_color=Ctransparent, selection_color=green, font_size=50, font_color=rouge)
-        
+        main_menu.add.button('Play', self.game_run, background_color=transparent, selection_color=blue, font_size=font_size, font_color=white) # Button run game 2d
+        main_menu.add.button('Play combat', sub_menu_play, background_color=transparent, selection_color=blue, font_size=font_size, font_color=white) # Button to sub menu
+        main_menu.add.button('Quit', pygame_menu.events.EXIT, background_color=transparent, selection_color=green, font_size=50, font_color=red)
+        # Menu Sound #
         sound_game = sound.Sound()
         sound_game.set_sound(sound.SOUND_TYPE_CLICK_MOUSE, "Pokemon/graphique/Menu/music/sound/mouse_click.ogg")
         sound_game.set_sound(sound.SOUND_TYPE_CLOSE_MENU, "Pokemon/graphique/Menu/music/sound/menu_close.ogg")
@@ -86,36 +99,37 @@ class Menu_game:
         main_menu.set_sound(sound_game, recursive=True)
         main_menu.enable()
         return main_menu
-    def adversaire_btn(self):
-        adversaire_json_path = "Pokemon/trainer.json"
-        with open(adversaire_json_path, 'r') as file_json:
-            dati_json = json.load(file_json)
+    # Method to get opponents
+    def opponent_btn(self):
+        opponent_json_path = "Pokemon/trainer.json"
+        with open(opponent_json_path, 'r') as file_json:
+            json_data = json.load(file_json)
             button = []
-            for adversaire in dati_json:
-                num_equipe = list(adversaire.keys())[0]
-                nomi_POKEMON = adversaire[num_equipe]
-                button.append((f"{num_equipe}: {' '.join(nomi_POKEMON)}", self.choix_adversaire))
+            for opponent in json_data:
+                team_number = list(opponent.keys())[0]
+                pokemon_names = opponent[team_number]
+                button.append((f"{team_number}: {' '.join(pokemon_names)}", self.opponent_choice))
             return button
+    # Method to get teams
+    def team_btn(self):
+        team_json_path = "Pokemon/team.json"
         
-    def equipe_btn(self):
-        equipe_json_path = "Pokemon/team.json"
-        
-        with open(equipe_json_path, 'r') as file_json:
-            dati_json = json.load(file_json)
+        with open(team_json_path, 'r') as file_json:
+            json_data = json.load(file_json)
             buttons = []
-            for equipe in dati_json:
-                num_equipe = list(equipe.keys())[0]
-                nomi_POKEMON = equipe[num_equipe]
-                buttons.append((f"EQUIPE: {num_equipe}: {' '.join(nomi_POKEMON)}", self.choix_equipe))
+            for team in json_data:
+                team_number = list(team.keys())[0]
+                pokemon_names = team[team_number]
+                buttons.append((f"TEAM: {team_number}: {' '.join(pokemon_names)}", self.team_choice))
             return buttons
-
+    # Resize Windows
     def on_resize(self):
         window_size = self.surface.get_size()
         self.width, self.height = window_size[0], window_size[1]
         self.background_image = pygame.transform.scale(self.background_image, (self.width, self.height))
         self.main_menu = self.create_main_menu()
 
-
+    # Main Run
     def run(self):
         while True:
             events = pygame.event.get()
@@ -134,27 +148,27 @@ class Menu_game:
 
     def game_run(self):
         pygame.mixer.music.stop()
-        path_music_jeu = "Pokemon/graphique/Menu/music/Focus Minimal Minimal 120.mp3"
+        path_game_music = "Pokemon/graphique/Menu/music/Focus Minimal Minimal 120.mp3"
         pygame.mixer.init()
-        self.click_sound = pygame.mixer.Sound(path_music_jeu)
-        pygame.mixer.music.load(path_music_jeu)
+        self.click_sound = pygame.mixer.Sound(path_game_music)
+        pygame.mixer.music.load(path_game_music)
         pygame.mixer.music.set_volume(0.5)
         pygame.mixer.music.play(-1)
         game = Game()
         game.run()
-# A FAIRE
-    def choix_adversaire(self, button_text):
+# TO DO
+    def opponent_choice(self, button_text):
         choice = button_text.split(":")[1].strip()
-        print("Scelta dell'avversario: ", choice)
-#       Pokemon.choix_Adversaire(choice)
-        #ajouter une méthode qui fait que le joueur 2 prend l'équipe
+        print("Opponent choice: ", choice)
+#       Pokemon.opponent_choice(choice)
+        # Add a method for player 2 to take the team
         pass
-    def choix_equipe(self, button_text):
-        # Richiama la funzione start_combat di poke.py passando la scelta della squadra
-        choice = button_text.split(':')[1].strip()  # Estrai la scelta dopo il primo ":" e rimuovi eventuali spazi
-        print("Scelta della squadra: ", choice)
- #       Pokemon.choix_Equipe(choice)
-        #ajouter une méthode qui fait que le joueur 1 prend l'équipe
+    def team_choice(self, button_text):
+        # Call the start_combat function from poke.py passing the team choice
+        choice = button_text.split(':')[1].strip()  # Extract choice after first ":" and remove any spaces
+        print("Team choice: ", choice)
+ #       Pokemon.team_choice(choice)
+        # Add a method for player 1 to take the team
         pass
 
 if __name__ == '__main__':
